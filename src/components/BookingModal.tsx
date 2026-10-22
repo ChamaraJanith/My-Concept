@@ -309,9 +309,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         ) : (
           /* Confirmation Success Voucher */
           <div className="booking-success-view">
-            <div className="success-icon-wrap">
-              <CheckCircle size={56} className="text-emerald-500" />
+            <div className="booking-success-hero-wrap">
+              <img 
+                src="/images/travel-ticketing-booking.jpg" 
+                alt="Pack your bags - Tour Confirmed" 
+                className="booking-success-hero-img" 
+              />
+              <div className="booking-success-hero-badge">
+                <CheckCircle size={16} className="text-emerald-400" />
+                <span>BOOKING REQUEST LOGGED</span>
+              </div>
             </div>
+
             <h2 className="success-title">Reservation Request Received!</h2>
             <p className="success-subtitle">
               Thank you, <strong>{fullName}</strong>. Your provisional booking reference is:

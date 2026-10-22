@@ -10,7 +10,8 @@ import {
   CheckCircle2,
   PhoneCall,
   ArrowRight,
-  Globe2
+  Globe2,
+  Play
 } from 'lucide-react';
 import { PackageCard } from './PackageCard';
 import { RevealOnScroll } from './RevealOnScroll';
@@ -49,7 +50,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇮🇳',
     region: 'Kashmir, Golden Triangle, Kerala, Chennai & Shrines',
     tagline: 'Srinagar Dal Lake deluxe houseboats & Gulmarg Gondola, Taj Mahal & Pink City Jaipur, Shimla Snow Point, Kerala backwaters, Dambadiva, Thirupathi & Velankanni.',
-    image: '/images/india-kashmir-delhi-6d5n.jpg',
+    image: '/images/taj-mahal.jpg',
     highlights: [
       'Kashmir Dal Lake Deluxe Houseboats',
       'Taj Mahal & Jaipur Golden Triangle',
@@ -165,6 +166,7 @@ interface AllToursPageProps {
   onBackToHome: () => void;
   onBookNow: (pkg: TourPackage) => void;
   onViewDetails: (pkg: TourPackage) => void;
+  onOpenPromoVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const AllToursPage: React.FC<AllToursPageProps> = ({
@@ -174,7 +176,8 @@ export const AllToursPage: React.FC<AllToursPageProps> = ({
   onSelectCountry,
   onBackToHome,
   onBookNow,
-  onViewDetails
+  onViewDetails,
+  onOpenPromoVideo
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -390,6 +393,21 @@ export const AllToursPage: React.FC<AllToursPageProps> = ({
                             <span className="country-card-count-badge">
                               {countryTourCount} {countryTourCount === 1 ? 'Tour Package' : 'Tour Packages'}
                             </span>
+                            {onOpenPromoVideo && (country.id === 'india' || country.id === 'dubai') && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onOpenPromoVideo(country.id === 'india' ? 'velankanni' : 'dubai');
+                                }}
+                                className={`country-card-video-chip ${country.id === 'india' ? 'cyan-chip' : 'gold-chip'}`}
+                                title={country.id === 'india' ? 'Watch Velankanni Pilgrimage Video' : 'Watch Dubai 4K Video'}
+                                id={`country-dir-video-btn-${country.id}`}
+                              >
+                                <Play size={11} fill="currentColor" />
+                                <span>{country.id === 'india' ? 'Velankanni Video' : 'Dubai Video'}</span>
+                              </button>
+                            )}
                           </div>
 
                           <div className="country-card-bottom-info">
@@ -566,6 +584,28 @@ export const AllToursPage: React.FC<AllToursPageProps> = ({
                 </div>
 
                 <div className="banner-right-cta">
+                  {onOpenPromoVideo && activeCountry.id === 'india' && (
+                    <button
+                      type="button"
+                      onClick={() => onOpenPromoVideo('velankanni')}
+                      className="btn-cyan-promo-video active-banner-video-btn"
+                      id="banner-watch-velankanni-video-btn"
+                    >
+                      <Play size={16} fill="currentColor" />
+                      <span>Watch Velankanni Tour Video</span>
+                    </button>
+                  )}
+                  {onOpenPromoVideo && activeCountry.id === 'dubai' && (
+                    <button
+                      type="button"
+                      onClick={() => onOpenPromoVideo('dubai')}
+                      className="btn-gold-promo-video active-banner-video-btn"
+                      id="banner-watch-dubai-video-btn"
+                    >
+                      <Play size={16} fill="currentColor" />
+                      <span>Watch Dubai Tour Video</span>
+                    </button>
+                  )}
                   <a 
                     href={`https://wa.me/94716891891?text=${encodeURIComponent(`Hello Nationwide.lk, I would like to inquire about ${activeCountry.name} tour packages.`)}`} 
                     target="_blank" 
@@ -844,6 +884,7 @@ export const AllToursPage: React.FC<AllToursPageProps> = ({
                         currency={currency}
                         onBookNow={onBookNow}
                         onViewDetails={onViewDetails}
+                        onWatchVideo={onOpenPromoVideo}
                       />
                     </RevealOnScroll>
                   ))}

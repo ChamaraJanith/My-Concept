@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Star, Users, Info, Sparkles } from 'lucide-react';
+import { Moon, Star, Users, Info, Sparkles, Play } from 'lucide-react';
 import type { TourPackage } from '../types';
 
 interface PackageCardProps {
@@ -7,13 +7,15 @@ interface PackageCardProps {
   currency: 'LKR' | 'USD';
   onBookNow: (pkg: TourPackage) => void;
   onViewDetails: (pkg: TourPackage) => void;
+  onWatchVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const PackageCard: React.FC<PackageCardProps> = ({
   pkg,
   currency,
   onBookNow,
-  onViewDetails
+  onViewDetails,
+  onWatchVideo
 }) => {
   // Exchange rate approximation: 1 USD ≈ 305 LKR
   const formatPrice = (lkrAmount: number) => {
@@ -23,6 +25,9 @@ export const PackageCard: React.FC<PackageCardProps> = ({
     }
     return `LKR ${lkrAmount.toLocaleString()}`;
   };
+
+  const hasPromoVideo = pkg.id === 'india-velankanni-4d3n' || pkg.id.includes('dubai');
+  const promoVideoType = pkg.id === 'india-velankanni-4d3n' ? 'velankanni' : 'dubai';
 
   return (
     <div className="package-card" id={`package-${pkg.id}`}>
@@ -42,6 +47,23 @@ export const PackageCard: React.FC<PackageCardProps> = ({
           <span>{pkg.rating.toFixed(1)}</span>
           <span className="reviews-count">({pkg.reviewsCount})</span>
         </div>
+
+        {/* Floating Promotional Video Pill if available */}
+        {onWatchVideo && hasPromoVideo && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onWatchVideo(promoVideoType);
+            }}
+            className={`package-card-video-pill ${promoVideoType === 'velankanni' ? 'velankanni-pill' : 'dubai-pill'}`}
+            title={`Watch ${promoVideoType === 'velankanni' ? 'Velankanni Pilgrimage' : 'Dubai 4K'} Tour Video`}
+            id={`card-watch-video-${pkg.id}`}
+          >
+            <Play size={11} fill="currentColor" />
+            <span>Tour Video</span>
+          </button>
+        )}
       </div>
 
       {/* Card Content Body */}

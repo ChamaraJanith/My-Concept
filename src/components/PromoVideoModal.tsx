@@ -1,18 +1,84 @@
-import React, { useEffect, useRef } from 'react';
-import { X, Sparkles, MapPin, Compass, ArrowRight, ShieldCheck } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { X, Sparkles, MapPin, Compass, ArrowRight, ShieldCheck, Film } from 'lucide-react';
+
+export type PromoVideoId = 'dubai' | 'velankanni';
 
 interface PromoVideoModalProps {
   isOpen: boolean;
+  initialVideo?: PromoVideoId;
   onClose: () => void;
-  onExploreDubai?: () => void;
+  onExploreDestination?: (countryId: string) => void;
 }
+
+interface VideoConfig {
+  id: PromoVideoId;
+  tabLabel: string;
+  flag: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  videoUrl: string;
+  poster: string;
+  countryId: string;
+  ctaText: string;
+  highlights: {
+    icon: 'shield' | 'sparkle' | 'compass';
+    text: string;
+  }[];
+}
+
+const VIDEO_CONFIGS: Record<PromoVideoId, VideoConfig> = {
+  dubai: {
+    id: 'dubai',
+    tabLabel: 'Dubai 4K Showcase',
+    flag: '🇦🇪',
+    badge: 'NATIONWIDE TRAVELS • DUBAI LUXURY SHOWCASE',
+    title: 'Experience Dubai & Abu Dhabi Like Never Before',
+    subtitle: 'Burj Khalifa 124th Level • Desert Safari Dune Bashing & BBQ • Marina Dhow Cruise • Ferrari World',
+    videoUrl: '/videos/dubai tour.mp4',
+    poster: '/images/dubai.jpg',
+    countryId: 'dubai',
+    ctaText: 'Explore Dubai Tour Packages',
+    highlights: [
+      { icon: 'shield', text: 'All-Inclusive Ground Transfers' },
+      { icon: 'sparkle', text: '4-Star Deluxe City Hotels' },
+      { icon: 'compass', text: 'Curated 4D 3N & 5D 4N Itineraries' }
+    ]
+  },
+  velankanni: {
+    id: 'velankanni',
+    tabLabel: 'Velankanni Pilgrimage',
+    flag: '🇮🇳',
+    badge: 'NATIONWIDE TRAVELS • SACRED PILGRIMAGE SHOWCASE',
+    title: 'Sacred Velankanni & Chennai Pilgrimage Tour',
+    subtitle: 'Basilica of Our Lady of Good Health • San Thome Cathedral • St. Thomas Mount • Chennai Silks & Shopping',
+    videoUrl: '/videos/india-velakkani-tour.mp4',
+    poster: '/images/india-chennai-5d4n.jpg',
+    countryId: 'india',
+    ctaText: 'Explore Velankanni & India Packages',
+    highlights: [
+      { icon: 'shield', text: 'Indian Tourist Visa Included' },
+      { icon: 'sparkle', text: 'Basilica of Our Lady of Good Health' },
+      { icon: 'compass', text: 'Private A/C Vehicle & Dedicated Chauffeur' }
+    ]
+  }
+};
 
 export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
   isOpen,
+  initialVideo = 'dubai',
   onClose,
-  onExploreDubai
+  onExploreDestination
 }) => {
+  const [activeVideoId, setActiveVideoId] = useState<PromoVideoId>(initialVideo);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Sync with initialVideo prop when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setActiveVideoId(initialVideo);
+    }
+  }, [isOpen, initialVideo]);
 
   // Close on Escape key press
   useEffect(() => {
@@ -29,14 +95,29 @@ export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  // Pause video if modal closes
+  // Pause video if modal closes or video changes
   useEffect(() => {
     if (!isOpen && videoRef.current) {
       videoRef.current.pause();
     }
   }, [isOpen]);
 
+  // When active video changes, reload video
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Handled autoplay gracefully
+        });
+      }
+    }
+  }, [activeVideoId]);
+
   if (!isOpen) return null;
+
+  const currentConfig = VIDEO_CONFIGS[activeVideoId] || VIDEO_CONFIGS.dubai;
 
   return (
     <div className="modal-backdrop promo-video-modal-backdrop" onClick={onClose}>
@@ -57,18 +138,41 @@ export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
           <X size={20} />
         </button>
 
+        {/* Modal Top Bar: Video Selector Tabs */}
+        <div className="promo-video-tabs-bar">
+          <div className="promo-video-tabs">
+            {(Object.keys(VIDEO_CONFIGS) as PromoVideoId[]).map((vidKey) => {
+              const cfg = VIDEO_CONFIGS[vidKey];
+              const isActive = activeVideoId === vidKey;
+              return (
+                <button
+                  key={vidKey}
+                  type="button"
+                  onClick={() => setActiveVideoId(vidKey)}
+                  className={`promo-video-tab-btn ${isActive ? 'active' : ''}`}
+                  id={`tab-promo-video-${vidKey}`}
+                >
+                  <span className="tab-video-flag">{cfg.flag}</span>
+                  <span className="tab-video-label">{cfg.tabLabel}</span>
+                  <Film size={14} className="tab-film-icon" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Modal Header */}
         <div className="promo-video-header">
           <div className="promo-video-pill">
             <Sparkles size={14} className="text-amber-400" />
-            <span>NATIONWIDE TRAVELS • EXCLUSIVE DESTINATION SHOWCASE</span>
+            <span>{currentConfig.badge}</span>
           </div>
           <h2 className="promo-video-title">
-            Experience Dubai & Abu Dhabi Like Never Before
+            {currentConfig.title}
           </h2>
           <p className="promo-video-subtitle">
             <MapPin size={15} className="inline-icon text-amber-400" />
-            Burj Khalifa 124th Level • Desert Safari with Dune Bashing & BBQ • Marina Dhow Cruise • Ferrari World
+            {currentConfig.subtitle}
           </p>
         </div>
 
@@ -76,12 +180,13 @@ export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
         <div className="promo-video-player-wrap">
           <video
             ref={videoRef}
-            src="/videos/dubai tour.mp4"
+            src={currentConfig.videoUrl}
             controls
             autoPlay
             playsInline
             className="promo-html5-video"
-            poster="/images/dubai.jpg"
+            poster={currentConfig.poster}
+            key={currentConfig.videoUrl}
           >
             Your browser does not support HTML5 video.
           </video>
@@ -89,25 +194,21 @@ export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
 
         {/* Highlights Bar */}
         <div className="promo-video-highlights-row">
-          <div className="promo-video-highlight-item">
-            <ShieldCheck size={16} className="text-emerald-400" />
-            <span>All-Inclusive Ground Transfers</span>
-          </div>
-          <div className="promo-video-highlight-item">
-            <Sparkles size={16} className="text-amber-400" />
-            <span>4-Star Deluxe City Hotels</span>
-          </div>
-          <div className="promo-video-highlight-item">
-            <Compass size={16} className="text-sky-400" />
-            <span>Curated 4D 3N & 5D 4N Itineraries</span>
-          </div>
+          {currentConfig.highlights.map((hl, i) => (
+            <div key={i} className="promo-video-highlight-item">
+              {hl.icon === 'shield' && <ShieldCheck size={16} className="text-emerald-400" />}
+              {hl.icon === 'sparkle' && <Sparkles size={16} className="text-amber-400" />}
+              {hl.icon === 'compass' && <Compass size={16} className="text-sky-400" />}
+              <span>{hl.text}</span>
+            </div>
+          ))}
         </div>
 
         {/* Modal Footer with Actions */}
         <div className="promo-video-footer">
           <div className="promo-video-footer-info">
-            <span className="footer-tagline">Ready to live this extraordinary experience?</span>
-            <span className="footer-sub">Custom quotes, free consultation & visa assistance available</span>
+            <span className="footer-tagline">Ready to experience this extraordinary journey?</span>
+            <span className="footer-sub">Official itineraries, transparent rates & hassle-free visa processing</span>
           </div>
 
           <div className="promo-video-footer-actions">
@@ -115,12 +216,12 @@ export const PromoVideoModal: React.FC<PromoVideoModalProps> = ({
               type="button"
               onClick={() => {
                 onClose();
-                if (onExploreDubai) onExploreDubai();
+                if (onExploreDestination) onExploreDestination(currentConfig.countryId);
               }}
               className="btn-primary promo-modal-cta-btn"
-              id="promo-modal-explore-dubai-btn"
+              id="promo-modal-explore-dest-btn"
             >
-              <span>Explore Dubai Tour Packages</span>
+              <span>{currentConfig.ctaText}</span>
               <ArrowRight size={17} />
             </button>
             <button

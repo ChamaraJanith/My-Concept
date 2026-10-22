@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Calendar, Check, Ban, Sparkles, MapPin, Moon } from 'lucide-react';
+import { X, Calendar, Check, Ban, Sparkles, MapPin, Moon, Play } from 'lucide-react';
 import type { TourPackage } from '../types';
 
 interface TourDetailsModalProps {
@@ -7,13 +7,15 @@ interface TourDetailsModalProps {
   currency: 'LKR' | 'USD';
   onClose: () => void;
   onBookNow: (pkg: TourPackage) => void;
+  onWatchVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const TourDetailsModal: React.FC<TourDetailsModalProps> = ({
   pkg,
   currency,
   onClose,
-  onBookNow
+  onBookNow,
+  onWatchVideo
 }) => {
   if (!pkg) return null;
 
@@ -71,6 +73,17 @@ export const TourDetailsModal: React.FC<TourDetailsModalProps> = ({
                 <span className="pill-badge-blue">
                   Min: {pkg.minPax} Pax
                 </span>
+              )}
+              {onWatchVideo && (pkg.id === 'india-velankanni-4d3n' || pkg.id.includes('dubai')) && (
+                <button
+                  type="button"
+                  onClick={() => onWatchVideo(pkg.id === 'india-velankanni-4d3n' ? 'velankanni' : 'dubai')}
+                  className="pill-badge-video"
+                  id={`modal-watch-video-${pkg.id}`}
+                  title="Watch Official Tour Video"
+                >
+                  <Play size={13} fill="currentColor" /> Watch Tour Video
+                </button>
               )}
             </div>
           </div>

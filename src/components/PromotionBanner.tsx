@@ -4,7 +4,7 @@ import { RevealOnScroll } from './RevealOnScroll';
 
 interface PromotionBannerProps {
   onSeePromotions: () => void;
-  onOpenPromoVideo?: () => void;
+  onOpenPromoVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const PromotionBanner: React.FC<PromotionBannerProps> = ({ 
@@ -78,15 +78,27 @@ export const PromotionBanner: React.FC<PromotionBannerProps> = ({
                 </button>
 
                 {onOpenPromoVideo && (
-                  <button
-                    type="button"
-                    onClick={onOpenPromoVideo}
-                    className="btn-gold-promo-video"
-                    id="promo-banner-watch-video-btn"
-                  >
-                    <Play size={16} fill="currentColor" />
-                    <span>Watch Dubai Tour Video</span>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => onOpenPromoVideo('dubai')}
+                      className="btn-gold-promo-video"
+                      id="promo-banner-watch-dubai-btn"
+                    >
+                      <Play size={16} fill="currentColor" />
+                      <span>Watch Dubai Tour Video</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onOpenPromoVideo('velankanni')}
+                      className="btn-cyan-promo-video"
+                      id="promo-banner-watch-velankanni-btn"
+                    >
+                      <Play size={16} fill="currentColor" />
+                      <span>Watch Velankanni Tour Video</span>
+                    </button>
+                  </>
                 )}
               </div>
             </div>

@@ -18,7 +18,7 @@ interface HeroProps {
   onFilterChange: (newFilter: Partial<FilterState>) => void;
   onSearchSubmit: () => void;
   isOpeningDone: boolean;
-  onOpenPromoVideo?: () => void;
+  onOpenPromoVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ 
@@ -170,18 +170,34 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="hero-video-action-row">
                 <button
                   type="button"
-                  onClick={onOpenPromoVideo}
-                  className="hero-watch-promo-btn"
+                  onClick={() => onOpenPromoVideo('dubai')}
+                  className="hero-watch-promo-btn hero-watch-dubai-btn"
                   id="hero-watch-dubai-video-btn"
                   title="Watch Dubai Promotional Video"
                 >
-                  <span className="hero-promo-play-circle">
+                  <span className="hero-promo-play-circle gold-circle">
                     <Play size={15} fill="currentColor" />
                   </span>
                   <span className="hero-promo-label">
-                    Watch Dubai Tour Promotional Video
+                    Watch Dubai Tour Video
                   </span>
-                  <span className="hero-promo-tag">4K PREVIEW</span>
+                  <span className="hero-promo-tag">4K HD</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onOpenPromoVideo('velankanni')}
+                  className="hero-watch-promo-btn hero-watch-velankanni-btn"
+                  id="hero-watch-velankanni-video-btn"
+                  title="Watch Velankanni & Chennai Pilgrimage Video"
+                >
+                  <span className="hero-promo-play-circle cyan-circle">
+                    <Play size={15} fill="currentColor" />
+                  </span>
+                  <span className="hero-promo-label">
+                    Watch Velankanni Tour Video
+                  </span>
+                  <span className="hero-promo-tag pilgrim-tag">PILGRIMAGE</span>
                 </button>
               </div>
             )}

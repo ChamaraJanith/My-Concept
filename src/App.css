@@ -2417,6 +2417,27 @@
   font-weight: 700;
 }
 
+.pill-badge-video {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #0f172a;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+}
+
+.pill-badge-video:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.8);
+}
+
 .tour-modal-body {
   padding: 28px;
 }
@@ -3939,7 +3960,10 @@
 }
 
 .explore-all-countries-banner {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 58, 138, 0.85) 100%), url('/images/misty-valley-highlands.jpg');
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 34px 40px;
   margin-top: 48px;
@@ -4000,10 +4024,12 @@
    16. DUBAI PROMOTIONAL VIDEO BUTTONS & MODAL (4K SHOWCASE)
    ------------------------------------------------------------- */
 .hero-video-action-row {
-  margin-top: 18px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 14px;
 }
 
 .hero-watch-promo-btn {
@@ -4011,7 +4037,7 @@
   align-items: center;
   gap: 14px;
   padding: 10px 22px 10px 12px;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(245, 158, 11, 0.45);
@@ -4023,26 +4049,45 @@
   text-align: left;
 }
 
+.hero-watch-promo-btn.hero-watch-velankanni-btn {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(56, 189, 248, 0.18);
+}
+
 .hero-watch-promo-btn:hover {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.9);
   border-color: #f59e0b;
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(245, 158, 11, 0.38);
+}
+
+.hero-watch-promo-btn.hero-watch-velankanni-btn:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(56, 189, 248, 0.38);
 }
 
 .hero-promo-play-circle {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #0f172a;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
   position: relative;
   flex-shrink: 0;
   transition: transform 0.25s ease;
+}
+
+.hero-promo-play-circle.gold-circle {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #0f172a;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+}
+
+.hero-promo-play-circle.cyan-circle {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
 }
 
 .hero-watch-promo-btn:hover .hero-promo-play-circle {
@@ -4059,6 +4104,10 @@
   border-radius: 50%;
   border: 2px solid rgba(245, 158, 11, 0.5);
   animation: pulsePlayRing 2s infinite ease-out;
+}
+
+.hero-promo-play-circle.cyan-circle::after {
+  border-color: rgba(56, 189, 248, 0.5);
 }
 
 @keyframes pulsePlayRing {
@@ -4091,7 +4140,13 @@
   margin-left: 6px;
 }
 
-/* Secondary Button in PromotionBanner */
+.hero-promo-tag.pilgrim-tag {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+/* Secondary Buttons in PromotionBanner */
 .btn-gold-promo-video {
   display: inline-flex;
   align-items: center;
@@ -4100,7 +4155,7 @@
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 700;
-  padding: 13px 24px;
+  padding: 13px 22px;
   border-radius: var(--radius-full);
   border: 1px solid rgba(245, 158, 11, 0.4);
   cursor: pointer;
@@ -4112,6 +4167,28 @@
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(217, 119, 6, 0.5);
+}
+
+.btn-cyan-promo-video {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 13px 22px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+}
+
+.btn-cyan-promo-video:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5);
 }
 
 /* Promo Video Modal Window */
@@ -4135,19 +4212,63 @@
   animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes modalScaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.94) translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+/* Video Selector Tabs Bar inside Modal */
+.promo-video-tabs-bar {
+  padding: 16px 24px 0 24px;
+  background: rgba(15, 23, 42, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.promo-video-tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.promo-video-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.promo-video-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.promo-video-tab-btn.active {
+  background: linear-gradient(135deg, rgba(30, 96, 242, 0.3) 0%, rgba(14, 165, 233, 0.25) 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+}
+
+.tab-video-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.tab-film-icon {
+  opacity: 0.6;
+}
+
+.promo-video-tab-btn.active .tab-film-icon {
+  opacity: 1;
+  color: #38bdf8;
 }
 
 .promo-video-close-btn {
-  top: 16px;
+  top: 14px;
   right: 16px;
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
@@ -4323,4 +4444,274 @@
     justify-content: center;
   }
 }
+
+/* -------------------------------------------------------------
+   17. SERVICES VISUAL SHOWCASE (PHOTO HIGHLIGHT CARDS)
+   ------------------------------------------------------------- */
+.services-visual-showcase {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 36px;
+  margin-bottom: 40px;
+}
+
+.service-visual-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.service-visual-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.14);
+  border-color: #cbd5e1;
+}
+
+.service-visual-img-wrap {
+  width: 100%;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.service-visual-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-visual-card:hover .service-visual-img {
+  transform: scale(1.05);
+}
+
+.service-visual-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.service-visual-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.service-visual-category {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e60f2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.service-visual-title {
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+}
+
+.service-visual-desc {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+.service-visual-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.service-perk-item {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+/* Booking Success Hero Visual */
+.booking-success-hero-wrap {
+  width: 100%;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.booking-success-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.booking-success-hero-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+@media (max-width: 840px) {
+  .services-visual-showcase {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------------
+   18. PROMOTIONAL VIDEO BADGES & DIRECT TRIGGER PILLS
+   ------------------------------------------------------------- */
+/* Package Card Floating Video Pill */
+.package-card-video-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.package-card-video-pill.velankanni-pill {
+  background: rgba(15, 23, 42, 0.88);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+.package-card-video-pill.velankanni-pill:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #38bdf8;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.45);
+}
+
+.package-card-video-pill.dubai-pill {
+  background: rgba(15, 23, 42, 0.88);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.package-card-video-pill.dubai-pill:hover {
+  background: #d97706;
+  color: #ffffff;
+  border-color: #fbbf24;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(217, 119, 6, 0.45);
+}
+
+/* Country Directory Card Video Chip */
+.country-card-video-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  border: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.country-card-video-chip.cyan-chip {
+  background: rgba(14, 116, 144, 0.92);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(14, 116, 144, 0.4);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.country-card-video-chip.cyan-chip:hover {
+  background: #0891b2;
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.5);
+}
+
+.country-card-video-chip.gold-chip {
+  background: rgba(180, 83, 9, 0.92);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.4);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.country-card-video-chip.gold-chip:hover {
+  background: #d97706;
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+}
+
+/* Active Country Banner Video Button */
+.active-banner-video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+
 

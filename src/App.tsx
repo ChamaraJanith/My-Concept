@@ -34,6 +34,12 @@ export function App() {
   const [detailsPackage, setDetailsPackage] = useState<TourPackage | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isPromoVideoOpen, setIsPromoVideoOpen] = useState(false);
+  const [promoVideoId, setPromoVideoId] = useState<'dubai' | 'velankanni'>('dubai');
+
+  const handleOpenPromoVideo = (videoId: 'dubai' | 'velankanni' = 'dubai') => {
+    setPromoVideoId(videoId);
+    setIsPromoVideoOpen(true);
+  };
 
   const handleToggleCurrency = () => {
     setCurrency(prev => (prev === 'LKR' ? 'USD' : 'LKR'));
@@ -256,7 +262,7 @@ export function App() {
             onFilterChange={handleFilterChange}
             onSearchSubmit={handleSearchSubmit}
             isOpeningDone={!showOpening}
-            onOpenPromoVideo={() => setIsPromoVideoOpen(true)}
+            onOpenPromoVideo={handleOpenPromoVideo}
           />
 
           {/* 4. Popular Tour Packages Section (Curated Featured) */}
@@ -268,12 +274,13 @@ export function App() {
             onBookNow={(pkg) => setBookingPackage(pkg)}
             onViewDetails={(pkg) => setDetailsPackage(pkg)}
             onViewAllTours={(cId) => handleOpenAllTours(cId || null)}
+            onWatchVideo={handleOpenPromoVideo}
           />
 
           {/* 5. Special Season Offer / Promo Card (10-30% Off) */}
           <PromotionBanner 
             onSeePromotions={handleSeePromotions} 
-            onOpenPromoVideo={() => setIsPromoVideoOpen(true)}
+            onOpenPromoVideo={handleOpenPromoVideo}
           />
 
           {/* 6. Our Services Section */}
@@ -297,6 +304,7 @@ export function App() {
           onBackToHome={handleBackToHome}
           onBookNow={(pkg) => setBookingPackage(pkg)}
           onViewDetails={(pkg) => setDetailsPackage(pkg)}
+          onOpenPromoVideo={handleOpenPromoVideo}
         />
       )}
 
@@ -318,6 +326,7 @@ export function App() {
           setDetailsPackage(null);
           setBookingPackage(pkg);
         }}
+        onWatchVideo={handleOpenPromoVideo}
       />
 
       <LoginModal 
@@ -325,11 +334,12 @@ export function App() {
         onClose={() => setIsLoginOpen(false)}
       />
 
-      {/* 10. Dubai Promotional Video Modal */}
+      {/* 10. Promotional Video Modal (Dubai 4K & Velankanni Pilgrimage) */}
       <PromoVideoModal 
         isOpen={isPromoVideoOpen}
+        initialVideo={promoVideoId}
         onClose={() => setIsPromoVideoOpen(false)}
-        onExploreDubai={() => handleOpenAllTours('dubai')}
+        onExploreDestination={(countryId) => handleOpenAllTours(countryId)}
       />
     </div>
   );

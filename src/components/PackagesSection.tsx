@@ -12,6 +12,7 @@ interface PackagesSectionProps {
   onBookNow: (pkg: TourPackage) => void;
   onViewDetails: (pkg: TourPackage) => void;
   onViewAllTours: (countryCode?: string) => void;
+  onWatchVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
 export const PackagesSection: React.FC<PackagesSectionProps> = ({
@@ -21,7 +22,8 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
   onResetFilters,
   onBookNow,
   onViewDetails,
-  onViewAllTours
+  onViewAllTours,
+  onWatchVideo
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -137,6 +139,7 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
                   currency={currency}
                   onBookNow={onBookNow}
                   onViewDetails={onViewDetails}
+                  onWatchVideo={onWatchVideo}
                 />
               </RevealOnScroll>
             ))}
