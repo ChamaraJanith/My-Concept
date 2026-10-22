@@ -6,7 +6,10 @@ import { Hero } from './components/Hero';
 import { PackagesSection } from './components/PackagesSection';
 import { PromotionBanner } from './components/PromotionBanner';
 import { ServicesSection } from './components/ServicesSection';
+import { AboutSection } from './components/AboutSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
+import { BlogsSection } from './components/BlogsSection';
+import { BlogArticleModal } from './components/BlogArticleModal';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
@@ -15,7 +18,7 @@ import { LoginModal } from './components/LoginModal';
 import { AllToursPage } from './components/AllToursPage';
 import { PromoVideoModal } from './components/PromoVideoModal';
 import { tourPackages } from './data/toursData';
-import type { TourPackage, FilterState } from './types';
+import type { TourPackage, FilterState, BlogPost } from './types';
 import './App.css';
 
 export function App() {
@@ -32,6 +35,7 @@ export function App() {
 
   const [bookingPackage, setBookingPackage] = useState<TourPackage | null>(null);
   const [detailsPackage, setDetailsPackage] = useState<TourPackage | null>(null);
+  const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isPromoVideoOpen, setIsPromoVideoOpen] = useState(false);
   const [promoVideoId, setPromoVideoId] = useState<'dubai' | 'velankanni'>('dubai');
@@ -227,6 +231,40 @@ export function App() {
     }
   };
 
+  const handleAboutClick = () => {
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        const aboutSection = document.getElementById('about');
+        if (aboutSection) {
+          aboutSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleBlogsClick = () => {
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        const blogsSection = document.getElementById('blogs');
+        if (blogsSection) {
+          blogsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const blogsSection = document.getElementById('blogs');
+      if (blogsSection) {
+        blogsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <div className="nationwide-app">
       {/* 0. Luxury Welcome Curtain Opening Screen */}
@@ -251,6 +289,8 @@ export function App() {
         onViewAllTours={() => handleOpenAllTours(null)}
         onHomeClick={handleBackToHome}
         onDestinationsClick={handleDestinationsClick}
+        onAboutClick={handleAboutClick}
+        onBlogsClick={handleBlogsClick}
       />
 
       {/* CONDITIONAL PAGE RENDERING */}
@@ -286,10 +326,22 @@ export function App() {
           {/* 6. Our Services Section */}
           <ServicesSection />
 
-          {/* 7. Client Testimonials */}
+          {/* 7. About Us Section */}
+          <AboutSection 
+            onViewAllTours={() => handleOpenAllTours(null)}
+            onContactClick={handlePlanTrip}
+          />
+
+          {/* 8. Client Testimonials */}
           <TestimonialsSection />
 
-          {/* 8. Contact & Inquiry Section */}
+          {/* 9. Travel Intelligence & Blogs Section */}
+          <BlogsSection 
+            onReadArticle={(post) => setSelectedBlogPost(post)}
+            onExploreTours={() => handleOpenAllTours(null)}
+          />
+
+          {/* 10. Contact & Inquiry Section */}
           <ContactSection />
         </>
       ) : (
@@ -340,6 +392,17 @@ export function App() {
         initialVideo={promoVideoId}
         onClose={() => setIsPromoVideoOpen(false)}
         onExploreDestination={(countryId) => handleOpenAllTours(countryId)}
+      />
+
+      {/* 11. Full Blog Article Modal */}
+      <BlogArticleModal 
+        post={selectedBlogPost}
+        isOpen={Boolean(selectedBlogPost)}
+        onClose={() => setSelectedBlogPost(null)}
+        onExploreTour={(pkgId) => {
+          setSelectedBlogPost(null);
+          handleOpenAllTours(pkgId);
+        }}
       />
     </div>
   );

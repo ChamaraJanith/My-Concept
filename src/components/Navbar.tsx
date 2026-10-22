@@ -6,13 +6,17 @@ interface NavbarProps {
   onViewAllTours?: () => void;
   onHomeClick?: () => void;
   onDestinationsClick?: () => void;
+  onAboutClick?: () => void;
+  onBlogsClick?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   onPlanTripClick, 
   onViewAllTours,
   onHomeClick,
-  onDestinationsClick
+  onDestinationsClick,
+  onAboutClick,
+  onBlogsClick
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,6 +54,22 @@ export const Navbar: React.FC<NavbarProps> = ({
         onDestinationsClick();
       }
       setActiveSection('destinations');
+      return;
+    }
+    if (linkName === 'About Us') {
+      if (onAboutClick) {
+        e.preventDefault();
+        onAboutClick();
+      }
+      setActiveSection('about');
+      return;
+    }
+    if (linkName === 'Blogs') {
+      if (onBlogsClick) {
+        e.preventDefault();
+        onBlogsClick();
+      }
+      setActiveSection('blogs');
       return;
     }
     if (linkName === 'Home' && onHomeClick) {

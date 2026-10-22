@@ -87,3 +87,33 @@ export interface Testimonial {
   comment: string;
   date: string;
 }
+
+export interface BlogSectionItem {
+  heading: string;
+  content: string;
+  bulletPoints?: string[];
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  category: 'Visa & Documentation' | 'Travel Guides' | 'Honeymoon & Couples' | 'Pilgrimages' | 'Travel Tips';
+  author: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
+  publishDate: string;
+  readTime: string;
+  image: string;
+  featured?: boolean;
+  excerpt: string;
+  keyTakeaways: string[];
+  sections: BlogSectionItem[];
+  relatedPackageId?: string;
+  relatedPackageName?: string;
+  tags: string[];
+}
+
