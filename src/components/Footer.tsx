@@ -1,9 +1,29 @@
+import React from 'react';
 import { Compass, Phone, Mail, MapPin, ArrowUp, MessageCircle } from 'lucide-react';
 import { RevealOnScroll } from './RevealOnScroll';
+import type { PageType } from './Navbar';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate?: (page: PageType) => void;
+  onSelectCountry?: (countryId: string) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectCountry }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCountryClick = (e: React.MouseEvent, countryId: string) => {
+    e.preventDefault();
+    if (onSelectCountry) onSelectCountry(countryId);
+    if (onNavigate) onNavigate('all-tours');
+    scrollToTop();
+  };
+
+  const handleNavClick = (e: React.MouseEvent, page: PageType) => {
+    e.preventDefault();
+    if (onNavigate) onNavigate(page);
+    scrollToTop();
   };
 
   return (
@@ -14,7 +34,10 @@ export const Footer: React.FC = () => {
             <div className="footer-top-grid">
             {/* Column 1: Brand & Bio */}
             <div className="footer-brand-col">
-              <div className="footer-logo">
+              <div 
+                className="footer-logo cursor-pointer" 
+                onClick={(e) => handleNavClick(e, 'home')}
+              >
                 <Compass className="footer-compass-icon" size={26} />
                 <span className="footer-brand-name">
                   Nationwide<span className="dot-lk">.lk</span>
@@ -35,15 +58,14 @@ export const Footer: React.FC = () => {
             <div className="footer-links-col">
               <h4 className="footer-col-title">Popular Destinations</h4>
               <ul className="footer-link-list">
-                <li><a href="#destinations">🇸🇬 Singapore & Universal Studios</a></li>
-                <li><a href="#destinations">🇲🇾 Malaysia Genting & Sunway Lagoon</a></li>
-                <li><a href="#destinations">🇦🇪 Dubai & Abu Dhabi: Burj Khalifa, Safari & Ferrari World</a></li>
-                <li><a href="#destinations">🇪🇺 European Marvels: UK, France, Swiss & Italy (12D 11N)</a></li>
-                <li><a href="#destinations">🇪🇺 Paris, Milan, Venice, Florence & Rome (12D 11N)</a></li>
-                <li><a href="#destinations">🇮🇳 Golden Triangle: Delhi, Agra & Jaipur</a></li>
-                <li><a href="#destinations">🇻🇳 Vietnam: Halong Bay, Da Nang & Ho Chi Minh</a></li>
-                <li><a href="#destinations">🇮🇩 Bali, Indonesia: Uluwatu & Nusa Penida</a></li>
-                <li><a href="#destinations">🇹🇭 Thailand: Bangkok, Pattaya & Phuket</a></li>
+                <li><a href="#singapore" onClick={(e) => handleCountryClick(e, 'singapore')}>🇸🇬 Singapore & Universal Studios</a></li>
+                <li><a href="#malaysia" onClick={(e) => handleCountryClick(e, 'malaysia')}>🇲🇾 Malaysia Genting & Sunway Lagoon</a></li>
+                <li><a href="#dubai" onClick={(e) => handleCountryClick(e, 'dubai')}>🇦🇪 Dubai & Abu Dhabi: Burj Khalifa, Safari</a></li>
+                <li><a href="#europe" onClick={(e) => handleCountryClick(e, 'europe')}>🇪🇺 European Marvels: UK, France, Swiss & Italy</a></li>
+                <li><a href="#india" onClick={(e) => handleCountryClick(e, 'india')}>🇮🇳 Kashmir & Golden Triangle: Delhi, Agra</a></li>
+                <li><a href="#vietnam" onClick={(e) => handleCountryClick(e, 'vietnam')}>🇻🇳 Vietnam: Halong Bay, Da Nang</a></li>
+                <li><a href="#bali" onClick={(e) => handleCountryClick(e, 'bali')}>🇮🇩 Bali, Indonesia: Uluwatu & Nusa Penida</a></li>
+                <li><a href="#thailand" onClick={(e) => handleCountryClick(e, 'thailand')}>🇹🇭 Thailand: Bangkok, Pattaya & Phuket</a></li>
               </ul>
             </div>
 
@@ -51,12 +73,12 @@ export const Footer: React.FC = () => {
             <div className="footer-links-col">
               <h4 className="footer-col-title">Travel Services</h4>
               <ul className="footer-link-list">
-                <li><a href="#services">Worldwide Air Ticket Booking</a></li>
-                <li><a href="#services">Express Tourist Visa Assistance</a></li>
-                <li><a href="#services">Corporate & MICE Group Travel</a></li>
-                <li><a href="#services">Tailor-Made Honeymoon Packages</a></li>
-                <li><a href="#services">Travel Insurance & Forex Advisory</a></li>
-                <li><a href="#services">Airport VIP Transfers</a></li>
+                <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Worldwide Air Ticket Booking</a></li>
+                <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Express Tourist Visa Assistance</a></li>
+                <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Corporate & MICE Group Travel</a></li>
+                <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Tailor-Made Honeymoon Packages</a></li>
+                <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')}>Travel Insurance & Forex Advisory</a></li>
+                <li><a href="#contact" onClick={(e) => handleNavClick(e, 'contact')}>Airport VIP Transfers & Inquiries</a></li>
               </ul>
             </div>
 
@@ -93,15 +115,15 @@ export const Footer: React.FC = () => {
 
           <div className="footer-bottom-bar">
             <p className="copyright-text">
-              © {new Date().getFullYear()} <strong>Nationwide.lk</strong>. All Rights Reserved. Crafted for premium Sri Lankan travelers.
+              © 2026 <strong>Nationwide.lk</strong>. All Rights Reserved. Crafted for premium Sri Lankan travelers.
             </p>
 
             <div className="footer-legal-links">
-              <a href="#privacy">Privacy Policy</a>
+              <a href="#privacy" onClick={(e) => handleNavClick(e, 'about')}>Privacy Policy</a>
               <span>•</span>
-              <a href="#terms">Terms & Conditions</a>
+              <a href="#terms" onClick={(e) => handleNavClick(e, 'about')}>Terms & Conditions</a>
               <span>•</span>
-              <a href="#faq">Travel FAQs</a>
+              <a href="#faq" onClick={(e) => handleNavClick(e, 'services')}>Travel FAQs</a>
             </div>
 
             <button 

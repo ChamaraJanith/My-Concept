@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { OpeningScreen } from './components/OpeningScreen';
 import { TopBar } from './components/TopBar';
-import { Navbar } from './components/Navbar';
+import { Navbar, type PageType } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { PackagesSection } from './components/PackagesSection';
 import { PromotionBanner } from './components/PromotionBanner';
@@ -16,6 +16,12 @@ import { BookingModal } from './components/BookingModal';
 import { TourDetailsModal } from './components/TourDetailsModal';
 import { LoginModal } from './components/LoginModal';
 import { AllToursPage } from './components/AllToursPage';
+import { DestinationsPage } from './components/DestinationsPage';
+import { ServicesPage } from './components/ServicesPage';
+import { AboutPage } from './components/AboutPage';
+import { TestimonialsPage } from './components/TestimonialsPage';
+import { BlogsPage } from './components/BlogsPage';
+import { ContactPage } from './components/ContactPage';
 import { PromoVideoModal } from './components/PromoVideoModal';
 import { tourPackages } from './data/toursData';
 import type { TourPackage, FilterState, BlogPost } from './types';
@@ -23,7 +29,7 @@ import './App.css';
 
 export function App() {
   const [showOpening, setShowOpening] = useState(true);
-  const [currentPage, setCurrentPage] = useState<'home' | 'all-tours'>('home');
+  const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
   const [currency, setCurrency] = useState<'LKR' | 'USD'>('LKR');
   const [filter, setFilter] = useState<FilterState>({
@@ -197,72 +203,19 @@ export function App() {
     handleOpenAllTours(null);
   };
 
+  const handleNavigate = (page: PageType) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectDestinationCountry = (countryId: string) => {
+    setSelectedCountryId(countryId);
+    setCurrentPage('all-tours');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handlePlanTrip = () => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const contactSection = document.getElementById('contact');
-        if (contactSection) {
-          contactSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const contactSection = document.getElementById('contact');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const handleDestinationsClick = () => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const destinationsSection = document.getElementById('destinations');
-        if (destinationsSection) {
-          destinationsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const destinationsSection = document.getElementById('destinations');
-      if (destinationsSection) {
-        destinationsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const handleAboutClick = () => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const aboutSection = document.getElementById('about');
-        if (aboutSection) {
-          aboutSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const aboutSection = document.getElementById('about');
-      if (aboutSection) {
-        aboutSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const handleBlogsClick = () => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const blogsSection = document.getElementById('blogs');
-        if (blogsSection) {
-          blogsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      const blogsSection = document.getElementById('blogs');
-      if (blogsSection) {
-        blogsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+    handleNavigate('contact');
   };
 
   return (
@@ -285,16 +238,13 @@ export function App() {
 
       {/* 2. Main Navigation Bar */}
       <Navbar 
+        currentPage={currentPage}
+        onNavigate={handleNavigate}
         onPlanTripClick={handlePlanTrip}
-        onViewAllTours={() => handleOpenAllTours(null)}
-        onHomeClick={handleBackToHome}
-        onDestinationsClick={handleDestinationsClick}
-        onAboutClick={handleAboutClick}
-        onBlogsClick={handleBlogsClick}
       />
 
       {/* CONDITIONAL PAGE RENDERING */}
-      {currentPage === 'home' ? (
+      {currentPage === 'home' && (
         <>
           {/* 3. Hero Section with Search Engine & Feature Cards */}
           <Hero 
@@ -344,10 +294,21 @@ export function App() {
           {/* 10. Contact & Inquiry Section */}
           <ContactSection />
         </>
-      ) : (
-        /* ========================================================
-           DEDICATED ALL TOURS BY COUNTRY DIRECTORY PAGE
-           ======================================================== */
+      )}
+
+      {/* Dedicated Destinations Page */}
+      {currentPage === 'destinations' && (
+        <DestinationsPage 
+          packages={tourPackages}
+          onSelectCountry={handleSelectDestinationCountry}
+          onBackToHome={handleBackToHome}
+          onPlanTrip={handlePlanTrip}
+          onOpenPromoVideo={handleOpenPromoVideo}
+        />
+      )}
+
+      {/* Dedicated All Tours Directory Page */}
+      {currentPage === 'all-tours' && (
         <AllToursPage 
           packages={tourPackages}
           currency={currency}
@@ -360,8 +321,57 @@ export function App() {
         />
       )}
 
+      {/* Dedicated Services Page */}
+      {currentPage === 'services' && (
+        <ServicesPage 
+          onBackToHome={handleBackToHome}
+          onPlanTrip={handlePlanTrip}
+          onExploreTours={() => handleOpenAllTours(null)}
+        />
+      )}
+
+      {/* Dedicated About Us Page */}
+      {currentPage === 'about' && (
+        <AboutPage 
+          onBackToHome={handleBackToHome}
+          onExploreTours={() => handleOpenAllTours(null)}
+          onPlanTrip={handlePlanTrip}
+        />
+      )}
+
+      {/* Dedicated Testimonials Page */}
+      {currentPage === 'testimonials' && (
+        <TestimonialsPage 
+          onBackToHome={handleBackToHome}
+          onExploreTours={() => handleOpenAllTours(null)}
+          onPlanTrip={handlePlanTrip}
+          onOpenPromoVideo={handleOpenPromoVideo}
+        />
+      )}
+
+      {/* Dedicated Blogs & Travel Guides Page */}
+      {currentPage === 'blogs' && (
+        <BlogsPage 
+          onBackToHome={handleBackToHome}
+          onReadArticle={(post) => setSelectedBlogPost(post)}
+          onExploreTours={() => handleOpenAllTours(null)}
+          onPlanTrip={handlePlanTrip}
+        />
+      )}
+
+      {/* Dedicated Contact Us Page */}
+      {currentPage === 'contact' && (
+        <ContactPage 
+          onBackToHome={handleBackToHome}
+          onExploreTours={() => handleOpenAllTours(null)}
+        />
+      )}
+
       {/* 9. Comprehensive Footer & WhatsApp Widget */}
-      <Footer />
+      <Footer 
+        onNavigate={handleNavigate}
+        onSelectCountry={handleSelectDestinationCountry}
+      />
 
       {/* Modals & Overlays */}
       <BookingModal 

@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Compass, Menu, X, PhoneCall } from 'lucide-react';
 
+export type PageType = 
+  | 'home' 
+  | 'destinations' 
+  | 'all-tours' 
+  | 'services' 
+  | 'about' 
+  | 'testimonials' 
+  | 'blogs' 
+  | 'contact';
+
 interface NavbarProps {
+  currentPage: PageType;
+  onNavigate: (page: PageType) => void;
   onPlanTripClick: () => void;
-  onViewAllTours?: () => void;
-  onHomeClick?: () => void;
-  onDestinationsClick?: () => void;
-  onAboutClick?: () => void;
-  onBlogsClick?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
-  onPlanTripClick, 
-  onViewAllTours,
-  onHomeClick,
-  onDestinationsClick,
-  onAboutClick,
-  onBlogsClick
+  currentPage,
+  onNavigate,
+  onPlanTripClick
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,55 +33,21 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Destinations', href: '#destinations' },
-    { name: 'All Tours', href: '#all-tours' },
-    { name: 'Our Services', href: '#services' },
-    { name: 'About Us', href: '#about' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Blogs', href: '#blogs' },
-    { name: 'Contact', href: '#contact' },
+  const navLinks: { name: string; page: PageType }[] = [
+    { name: 'Home', page: 'home' },
+    { name: 'Destinations', page: 'destinations' },
+    { name: 'All Tours', page: 'all-tours' },
+    { name: 'Our Services', page: 'services' },
+    { name: 'About Us', page: 'about' },
+    { name: 'Testimonials', page: 'testimonials' },
+    { name: 'Blogs', page: 'blogs' },
+    { name: 'Contact', page: 'contact' },
   ];
 
-  const handleLinkClick = (e: React.MouseEvent, linkName: string) => {
-    if (linkName === 'All Tours' && onViewAllTours) {
-      e.preventDefault();
-      onViewAllTours();
-      setActiveSection('all-tours');
-      return;
-    }
-    if (linkName === 'Destinations') {
-      if (onDestinationsClick) {
-        e.preventDefault();
-        onDestinationsClick();
-      }
-      setActiveSection('destinations');
-      return;
-    }
-    if (linkName === 'About Us') {
-      if (onAboutClick) {
-        e.preventDefault();
-        onAboutClick();
-      }
-      setActiveSection('about');
-      return;
-    }
-    if (linkName === 'Blogs') {
-      if (onBlogsClick) {
-        e.preventDefault();
-        onBlogsClick();
-      }
-      setActiveSection('blogs');
-      return;
-    }
-    if (linkName === 'Home' && onHomeClick) {
-      e.preventDefault();
-      onHomeClick();
-      setActiveSection('home');
-      return;
-    }
-    setActiveSection(linkName.toLowerCase());
+  const handleLinkClick = (e: React.MouseEvent, page: PageType) => {
+    e.preventDefault();
+    onNavigate(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -89,10 +58,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           href="#home" 
           className="navbar-logo"
           onClick={(e) => {
-            if (onHomeClick) {
-              e.preventDefault();
-              onHomeClick();
-            }
+            e.preventDefault();
+            onNavigate('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
           <div className="logo-icon-wrap">
@@ -108,9 +76,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {navLinks.map((link) => (
             <a
               key={link.name}
-              href={link.href}
-              className={`nav-link-item ${activeSection === link.name.toLowerCase() ? 'active' : ''}`}
-              onClick={(e) => handleLinkClick(e, link.name)}
+              href={`#${link.page}`}
+              className={`nav-link-item ${currentPage === link.page ? 'active' : ''}`}
+              onClick={(e) => handleLinkClick(e, link.page)}
             >
               {link.name}
             </a>
@@ -147,11 +115,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href={link.href}
-                className="mobile-menu-item"
+                href={`#${link.page}`}
+                className={`mobile-menu-item ${currentPage === link.page ? 'active font-bold text-amber-500' : ''}`}
                 onClick={(e) => {
                   setMobileMenuOpen(false);
-                  handleLinkClick(e, link.name);
+                  handleLinkClick(e, link.page);
                 }}
               >
                 {link.name}

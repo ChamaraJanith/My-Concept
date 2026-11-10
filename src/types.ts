@@ -85,7 +85,8 @@ export interface Testimonial {
   avatar: string;
   rating: number;
   comment: string;
-  date: string;
+  date?: string;
+  travelMonth?: string;
 }
 
 export interface BlogSectionItem {
