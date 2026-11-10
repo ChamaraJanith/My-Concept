@@ -2089,247 +2089,374 @@
   transform: rotate(90deg);
 }
 
-/* Booking Modal specifics */
+/* Booking Modal - Streamlined WhatsApp Quick Reservation */
 .booking-modal-content {
-  max-width: 680px;
-  padding: 32px;
+  max-width: 620px;
+  padding: 30px 32px;
+  border-radius: var(--radius-lg);
 }
 
 .booking-modal-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  text-align: left;
 }
 
-.booking-modal-subtitle {
-  color: var(--blue-primary);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.05em;
+.booking-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(37, 211, 102, 0.12);
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  color: #15803d;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  margin-bottom: 8px;
 }
 
 .booking-modal-title {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin: 4px 0;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 0 0 4px 0;
 }
 
 .booking-modal-tagline {
   color: #64748b;
-  font-size: 0.94rem;
+  font-size: 0.88rem;
+  margin: 0;
 }
 
-.booking-summary-card {
+/* Compact Tour Snapshot Card */
+.booking-compact-tour-card {
   display: flex;
-  gap: 16px;
+  gap: 14px;
   align-items: center;
-  background-color: #f8fafc;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
-  padding: 12px;
+  padding: 12px 14px;
   border-radius: var(--radius-md);
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
-.booking-summary-img {
-  width: 80px;
+.booking-compact-tour-img {
+  width: 76px;
   height: 60px;
   object-fit: cover;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
+  shrink: 0;
 }
 
-.booking-dest-name {
-  display: block;
+.booking-compact-tour-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-compact-tour-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.booking-compact-tour-name {
+  font-size: 0.98rem;
   font-weight: 800;
-  font-size: 1.05rem;
   color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.booking-dest-duration {
-  display: block;
-  font-size: 0.82rem;
+.booking-compact-tour-nights {
+  background: #e0f2fe;
+  color: #0284c7;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  shrink: 0;
+}
+
+.booking-compact-tour-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.booking-compact-price-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.76rem;
   color: #64748b;
 }
 
-.booking-package-rating .stars {
-  color: #f59e0b;
-  font-size: 0.8rem;
+.booking-compact-price-pill strong {
+  color: #2563eb;
+  font-size: 0.88rem;
 }
 
-.booking-package-rating .rating-num {
-  font-size: 0.76rem;
-  color: #475569;
-  margin-left: 4px;
-}
-
-.pax-counter-wrap {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background-color: #f1f5f9;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  width: fit-content;
-}
-
-.pax-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background-color: #ffffff;
-  color: #0f172a;
-  font-weight: 800;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.pax-count-display {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #0f172a;
-  min-width: 90px;
-  text-align: center;
-}
-
-.tier-choice-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.tier-choice-btn {
-  border: 1.5px solid #e2e8f0;
-  background-color: #ffffff;
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  text-align: left;
+/* Streamlined Booking Form */
+.simple-booking-form {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  transition: all var(--transition-fast);
+  gap: 14px;
 }
 
-.tier-choice-btn strong {
-  color: var(--blue-primary);
-  font-size: 0.95rem;
+.booking-field-group {
+  display: flex;
+  flex-direction: column;
 }
 
-.tier-choice-btn.active {
-  border-color: var(--blue-primary);
-  background-color: #eff6ff;
-}
-
-.toggle-flight-checkbox {
+.simple-form-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.live-pricing-summary {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: var(--radius-md);
-  padding: 18px;
-  margin: 20px 0;
-}
-
-.pricing-calc-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #334155;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
   margin-bottom: 6px;
 }
 
-.pricing-calc-divider {
-  height: 1px;
-  background-color: #bfdbfe;
-  margin: 10px 0;
+.simple-form-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-.pricing-total-row {
+.simple-form-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.simple-pax-picker {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 3px 6px;
+  height: 40px;
+  box-sizing: border-box;
 }
 
-.total-label {
-  font-size: 1.1rem;
+.simple-pax-btn {
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.simple-pax-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.simple-pax-number {
+  font-size: 0.88rem;
   font-weight: 800;
   color: #0f172a;
 }
 
-.total-amount {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #0066ff;
+.simple-flight-toggle-row {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
 }
 
-.pricing-disclaimer {
-  display: block;
+.simple-flight-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.simple-checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.simple-flight-text {
+  font-size: 0.86rem;
+  color: #334155;
+}
+
+.simple-flight-text strong {
+  color: #0f172a;
+}
+
+/* WhatsApp Trust Note */
+.simple-whatsapp-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: #166534;
+  line-height: 1.45;
+}
+
+.note-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 8px #16a34a;
+  margin-top: 4px;
+  shrink: 0;
+  animation: radarBlink 1.4s infinite;
+}
+
+/* Big Green WhatsApp Button */
+.simple-whatsapp-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: #ffffff !important;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.38);
+  transition: all 0.25s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.simple-whatsapp-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+  filter: brightness(1.05);
+}
+
+.simple-trust-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-size: 0.74rem;
   color: #64748b;
-  margin-top: 8px;
+  margin-top: -4px;
 }
 
+/* Confirmation Success View */
 .booking-success-view {
   text-align: center;
-  padding: 20px 10px;
+  padding: 14px 8px;
 }
 
-.success-icon-wrap {
-  margin-bottom: 16px;
+.booking-success-icon-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #dcfce7;
+  border: 2px solid #86efac;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
 }
 
 .success-title {
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 1.6rem;
+  font-weight: 900;
   color: #0f172a;
+  margin-bottom: 6px;
 }
 
 .success-subtitle {
   color: #64748b;
+  font-size: 0.9rem;
   margin-bottom: 14px;
 }
 
 .booking-ref-badge {
   display: inline-block;
-  background-color: #f1f5f9;
-  border: 1.5px dashed var(--blue-primary);
-  color: var(--blue-primary);
+  background-color: #f0fdf4;
+  border: 1.5px dashed #22c55e;
+  color: #15803d;
   font-family: monospace;
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 800;
-  padding: 8px 24px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
+  padding: 6px 18px;
+  border-radius: 8px;
+  margin-bottom: 16px;
 }
 
 .voucher-details-box {
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
-  padding: 18px;
+  padding: 14px 18px;
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .voucher-line {
   display: flex;
   justify-content: space-between;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: #334155;
+}
+
+.voucher-line strong {
+  color: #0f172a;
+}
+
+.success-chat-hint {
+  font-size: 0.84rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.success-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Tour Details Modal */
@@ -3062,194 +3189,165 @@
   line-height: 1.45;
 }
 
-/* =========================================================================
-   WORLD MAP RADAR FLIGHT CANVAS & ART
-   ========================================================================= */
-.world-map-flight-canvas-container {
-  position: absolute;
-  inset: 0;
+/* TOURISM SHOWCASE: Live Destination Preview Card (Images Only) */
+.destination-preview-card {
   width: 100%;
-  height: 100%;
-  z-index: 4;
-  pointer-events: none;
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(14, 165, 233, 0.15);
+  backdrop-filter: blur(14px);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.dest-preview-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 210px;
   overflow: hidden;
 }
 
-.world-map-svg {
+.dest-preview-image {
   width: 100%;
   height: 100%;
-  display: block;
+  object-fit: cover;
+  transition: transform 1.2s ease;
+  animation: subtleZoom 1.2s ease-out;
 }
 
-.animated-flight-dash {
-  animation: dashAnimation 20s linear infinite;
+@keyframes subtleZoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
 }
 
-@keyframes dashAnimation {
-  to {
-    stroke-dashoffset: -1000;
-  }
+.dest-preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, transparent 45%, rgba(15, 23, 42, 0.75) 100%);
+  pointer-events: none;
 }
 
-.node-radar-wave {
-  animation: radarWaveExpand 2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
-  transform-origin: center;
-}
-
-@keyframes radarWaveExpand {
-  0% {
-    r: 8;
-    opacity: 0.9;
-  }
-  100% {
-    r: 32;
-    opacity: 0;
-  }
-}
-
-.destination-map-node {
-  transition: all 0.3s ease;
-}
-
-.destination-map-node text {
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-}
-
-.airliner-jet-svg {
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.8));
-}
-
-/* =========================================================================
-   CINEMATIC WORLD PLACES OVERLAY (MINIMAL & ELEGANT)
-   ========================================================================= */
-.world-map-overlay-box {
-  position: relative;
-  z-index: 10;
-  max-width: 650px;
-  width: 92%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -30px;
-}
-
-/* Dynamic Active Destination Flight Tracker Pill */
-.current-place-flight-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1.5px solid rgba(245, 158, 11, 0.5);
-  backdrop-filter: blur(14px);
-  padding: 10px 22px;
-  border-radius: 9999px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
-  margin-bottom: 22px;
-  transition: all 0.3s ease;
-}
-
-.flight-status-icon-wrap {
-  width: 36px;
-  height: 36px;
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  shrink: 0;
-}
-
-.flight-destination-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.flight-status-tag {
-  font-size: 0.68rem;
-  font-weight: 800;
-  color: #38bdf8;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.flight-city-headline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.12rem;
+.dest-live-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(14, 165, 233, 0.92);
   color: #ffffff;
-}
-
-.destination-flag {
-  font-size: 1.25rem;
-}
-
-.destination-name {
-  font-weight: 900;
-  letter-spacing: -0.01em;
-}
-
-.destination-sub-code {
-  color: #94a3b8;
+  font-size: 0.76rem;
   font-weight: 700;
-  font-size: 0.88rem;
-  font-family: monospace;
-}
-
-.destination-highlight-pill {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fde68a;
-  font-size: 0.74rem;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 9999px;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-/* Places Breadcrumb Strip (All Destinations on the Journey) */
-.places-breadcrumb-strip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-  padding: 8px 18px;
-  margin-bottom: 24px;
-  backdrop-filter: blur(8px);
-}
-
-.place-strip-chip {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #64748b;
+  gap: 6px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Dots bar overlay inside photo */
+.dest-dots-bar {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 0 8px;
+}
+
+.dest-dots-bar.dest-dots-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  padding: 0;
+  z-index: 5;
+}
+
+.dest-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
   transition: all 0.25s ease;
 }
 
-.place-strip-chip.passed {
-  color: #93c5fd;
+.dest-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background-color: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
 }
 
-.place-strip-chip.active {
-  color: #f59e0b;
-  transform: scale(1.15);
-  font-weight: 900;
-  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+/* Loader Track & Status */
+.opening-loader-container {
+  width: 100%;
+  max-width: 460px;
+  margin-bottom: 18px;
 }
 
-.chip-arrow {
-  color: rgba(255, 255, 255, 0.25);
-  font-size: 0.85rem;
+.opening-loader-track {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  position: relative;
+}
+
+.opening-loader-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1e60f2 0%, #38bdf8 60%, #60a5fa 100%);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 14px #38bdf8;
+  position: relative;
+  will-change: width;
+}
+
+.loader-shimmer-highlight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  animation: shimmerMove 1.5s infinite;
+}
+
+/* Mini plane icon at the tip of the progress bar */
+.loader-plane-tip {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  color: #ffffff;
+  transform: rotate(45deg);
+  filter: drop-shadow(0 0 6px #38bdf8);
+}
+
+@keyframes shimmerMove {
+  from { transform: translateX(-30px); }
+  to { transform: translateX(30px); }
+}
+
+.opening-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+
+.opening-status-text {
+  color: #94a3b8;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.opening-percentage {
+  color: #38bdf8;
+  font-family: monospace;
   font-weight: 800;
+  font-size: 0.9rem;
 }
 
 /* Action Button */
