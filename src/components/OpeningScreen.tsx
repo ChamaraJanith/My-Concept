@@ -20,16 +20,34 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
   const [activeDestIndex, setActiveDestIndex] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [dimensions, setDimensions] = useState(() => ({
+    w: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    h: typeof window !== 'undefined' ? window.innerHeight : 700
+  }));
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
+  // Responsive resize listener ensuring flight path and airplane stay 100% visible on any screen
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        w: window.innerWidth,
+        h: window.innerHeight
+      });
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Flight Route Waypoints along the flight curve
   const routeWaypoints = useMemo(() => [
-    { t: 0.0, code: 'CMB', city: 'Colombo', flag: '🇱🇰' },
-    { t: 0.25, code: 'BKK', city: 'Bangkok', flag: '🇹🇭' },
-    { t: 0.50, code: 'PTY', city: 'Pattaya', flag: '🇹🇭' },
-    { t: 0.75, code: 'KHL', city: 'Coral Island', flag: '🇹🇭' },
-    { t: 1.0, code: 'SFW', city: 'Safari World', flag: '🇹🇭' }
+    { t: 0.06, code: 'CMB', city: 'Colombo', flag: '🇱🇰' },
+    { t: 0.30, code: 'BKK', city: 'Bangkok', flag: '🇹🇭' },
+    { t: 0.52, code: 'PTY', city: 'Pattaya', flag: '🇹🇭' },
+    { t: 0.76, code: 'KHL', city: 'Coral Island', flag: '🇹🇭' },
+    { t: 0.96, code: 'SFW', city: 'Safari World', flag: '🇹🇭' }
   ], []);
 
   // Featured destinations cycling during the intro (pure place photos, no package details)
@@ -42,17 +60,24 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
     { place: 'Taj Mahal & Kashmir', flag: '🇮🇳', img: '/images/taj-mahal.jpg' }
   ], []);
 
-  // Mathematical Bezier Curve Coordinates for the Sky Flight Arc (ViewBox 1200 x 700)
-  const p0x = 100, p0y = 580; // Colombo Airport
-  const p1x = 550, p1y = 440; // Mid-climb control point
-  const p2x = 1100, p2y = 120; // High cruise altitude destination
+  const isMobile = dimensions.w < 640;
+  const isTablet = dimensions.w >= 640 && dimensions.w < 1024;
+  const planeScale = isMobile ? 0.62 : isTablet ? 0.78 : 0.95;
+
+  // Bezier Curve Coordinates mapped 1:1 to the actual device viewport pixels
+  const p0x = dimensions.w * 0.06;
+  const p0y = dimensions.h * 0.88;
+  const p1x = dimensions.w * 0.48;
+  const p1y = dimensions.h * 0.60;
+  const p2x = dimensions.w * 0.94;
+  const p2y = dimensions.h * 0.12;
 
   // Calculate current plane position along the bezier curve with floating point precision
   const t = Math.min(1, Math.max(0, progress));
   const currentPlaneX = (1 - t) * (1 - t) * p0x + 2 * (1 - t) * t * p1x + t * t * p2x;
   const currentPlaneY = (1 - t) * (1 - t) * p0y + 2 * (1 - t) * t * p1y + t * t * p2y;
 
-  // Calculate instantaneous tangent vector (heading direction)
+  // Calculate instantaneous tangent vector (heading direction) in true screen pixels
   const dx = 2 * (1 - t) * (p1x - p0x) + 2 * t * (p2x - p1x);
   const dy = 2 * (1 - t) * (p1y - p0y) + 2 * t * (p2y - p1y);
   // Tangent angle in degrees: Nose points EXACTLY along this angle!
@@ -229,15 +254,14 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       </div>
 
       {/* =========================================================
-          MATHEMATICALLY SYNCHRONIZED SVG SKY FLIGHT SYSTEM
-          Both the trajectory line and the airplane live in the exact
-          same coordinate space (1200 x 700), guaranteeing 100% alignment!
+          RESPONSIVE MATHEMATICALLY SYNCHRONIZED SVG SKY FLIGHT SYSTEM
+          Coordinates match the screen pixels directly, eliminating
+          any aspect ratio squashing or off-screen clipping!
           ========================================================= */}
       <div className="sky-flight-svg-container">
         <svg 
-          viewBox="0 0 1200 700" 
+          viewBox={`0 0 ${dimensions.w} ${dimensions.h}`} 
           className="sky-flight-canvas"
-          preserveAspectRatio="none"
         >
           <defs>
             {/* Contrail Glowing Gradient */}
@@ -274,35 +298,35 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
           <path 
             d={`M ${p0x},${p0y} Q ${p1x},${p1y} ${p2x},${p2y}`}
             fill="none"
-            stroke="rgba(56, 189, 248, 0.15)"
-            strokeWidth="2"
+            stroke="rgba(56, 189, 248, 0.16)"
+            strokeWidth={isMobile ? "1.5" : "2"}
             strokeDasharray="6 6"
           />
 
-          {/* Active Jet Contrail (Starts at Colombo and touches the plane's engines in continuous sub-pixels) */}
+          {/* Active Jet Contrail (Starts at Colombo and touches the plane's engines) */}
           <path 
             d={`M ${p0x},${p0y} Q ${p1x},${p1y} ${p2x},${p2y}`}
             fill="none"
             stroke="url(#contrailGlowGrad)"
-            strokeWidth="3.5"
+            strokeWidth={isMobile ? "2.5" : "3.5"}
             pathLength="100"
             strokeDasharray={`${t * 100} 100`}
             strokeLinecap="round"
             filter="drop-shadow(0 0 8px rgba(56, 189, 248, 0.8))"
           />
 
-          {/* Route Waypoint Nodes along the Path */}
+          {/* Route Waypoint Nodes along the Path with correct responsive positions */}
           {routeWaypoints.map((wp) => {
             const wpt = wp.t;
             const wx = (1 - wpt) * (1 - wpt) * p0x + 2 * (1 - wpt) * wpt * p1x + wpt * wpt * p2x;
-            const wy = (1 - wpt) * (1 - wpt) * p0y + 2 * (1 - wpt) * wpt * p1x + wpt * wpt * p2y;
+            const wy = (1 - wpt) * (1 - wpt) * p0y + 2 * (1 - wpt) * wpt * p1y + wpt * wpt * p2y;
             const isPassed = t >= wpt;
             const isCurrent = Math.abs(t - wpt) < 0.08;
 
             return (
-              <g key={wp.code} transform={`translate(${wx}, ${wy})`}>
+              <g key={wp.code} transform={`translate(${wx.toFixed(1)}, ${wy.toFixed(1)})`}>
                 <circle 
-                  r={isCurrent ? "8" : "4.5"} 
+                  r={isCurrent ? (isMobile ? "6" : "8") : (isMobile ? "3.5" : "4.5")} 
                   fill={isCurrent ? "#38bdf8" : isPassed ? "#0ea5e9" : "#334155"} 
                   stroke="#ffffff"
                   strokeWidth={isCurrent ? "2" : "1"}
@@ -310,10 +334,10 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
                 />
                 <text 
                   x="0" 
-                  y={wy > 350 ? "20" : "-14"} 
+                  y={wy > dimensions.h * 0.5 ? (isMobile ? "15" : "18") : (isMobile ? "-9" : "-12")} 
                   textAnchor="middle" 
                   fill={isCurrent ? "#ffffff" : isPassed ? "#93c5fd" : "#64748b"}
-                  fontSize="12"
+                  fontSize={isMobile ? "10" : "12"}
                   fontWeight="700"
                   fontFamily="monospace"
                 >
@@ -324,12 +348,11 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
           })}
 
           {/* =======================================================
-              COMMERCIAL AIRLINER JET (FLUID SUB-PIXEL MOTION)
-              Modeled pointing EAST (0°), then rotated by planeHeadingAngle!
+              COMMERCIAL AIRLINER JET (PERFECT 1:1 SCALE ON ALL DEVICES)
               Nose points 100% PERFECTLY in the direction of flight!
               ======================================================= */}
           <g 
-            transform={`translate(${currentPlaneX.toFixed(2)}, ${currentPlaneY.toFixed(2)}) rotate(${planeHeadingAngle.toFixed(2)}) ${isClosing ? 'scale(2.8) translate(140, 0)' : 'scale(1)'}`}
+            transform={`translate(${currentPlaneX.toFixed(2)}, ${currentPlaneY.toFixed(2)}) rotate(${planeHeadingAngle.toFixed(2)}) scale(${isClosing ? planeScale * 2.8 : planeScale})`}
             className="commercial-jet-group"
             style={{ 
               transition: isClosing ? 'transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease' : 'none' 
@@ -343,8 +366,8 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
               y2="-22" 
               stroke="url(#thrustGlowGrad)" 
               strokeWidth="4" 
-              strokeLinecap="round"
-              opacity="0.9"
+              strokeLinecap="round" 
+              opacity="0.9" 
             />
             <line 
               x1="-24" 
@@ -353,19 +376,17 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
               y2="22" 
               stroke="url(#thrustGlowGrad)" 
               strokeWidth="4" 
-              strokeLinecap="round"
-              opacity="0.9"
+              strokeLinecap="round" 
+              opacity="0.9" 
             />
 
             {/* Swept-back Wings (Port & Starboard) */}
-            {/* Starboard Wing (Bottom) */}
             <polygon 
               points="10,7 -20,62 -32,58 -10,7" 
               fill="url(#jetWingGrad)" 
               stroke="#64748b" 
               strokeWidth="0.8" 
             />
-            {/* Port Wing (Top) */}
             <polygon 
               points="10,-7 -20,-62 -32,-58 -10,-7" 
               fill="url(#jetWingGrad)" 
@@ -374,10 +395,8 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
             />
 
             {/* Jet Turbofan Engines under wings */}
-            {/* Starboard Engine */}
             <rect x="-18" y="17" width="22" height="10" rx="4" fill="#334155" stroke="#475569" strokeWidth="0.8" />
             <ellipse cx="4" cy="22" rx="2" ry="4" fill="#38bdf8" />
-            {/* Port Engine */}
             <rect x="-18" y="-27" width="22" height="10" rx="4" fill="#334155" stroke="#475569" strokeWidth="0.8" />
             <ellipse cx="4" cy="-22" rx="2" ry="4" fill="#38bdf8" />
 
@@ -386,7 +405,6 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
             <polygon points="-36,3 -55,22 -60,19 -44,3" fill="#cbd5e1" />
 
             {/* Main Streamlined Fuselage (Aircraft Body) */}
-            {/* Nose is at (+60, 0), Tail is at (-52, 0) */}
             <path 
               d="M 60,0 C 45,-8 -25,-8 -50,-4 C -54,-2 -54,2 -50,4 C -25,8 45,8 60,0 Z" 
               fill="url(#jetBodyGrad)" 
@@ -400,7 +418,7 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
               fill="#1e60f2" 
             />
 
-            {/* Cockpit Windshield (Black tinted glass facing nose at right) */}
+            {/* Cockpit Windshield */}
             <path 
               d="M 46,-2.5 Q 52,0 46,2.5 Q 43,0 46,-2.5 Z" 
               fill="#0f172a" 
@@ -410,11 +428,8 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
             <polygon points="-35,0 -52,0 -56,-14 -44,-12" fill="#1e60f2" />
 
             {/* Navigation Strobe Lights */}
-            {/* Starboard wingtip: Green */}
             <circle cx="-26" cy="60" r="3" fill="#22c55e" className="svg-strobe-green" />
-            {/* Port wingtip: Red */}
             <circle cx="-26" cy="-60" r="3" fill="#ef4444" className="svg-strobe-red" />
-            {/* Tail beacon: White */}
             <circle cx="-52" cy="0" r="2.5" fill="#ffffff" className="svg-strobe-white" />
           </g>
         </svg>
@@ -450,10 +465,10 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       <div className="opening-content-box">
         {/* Boarding Pass Header Badge */}
         <div className="boarding-pass-pill">
-          <Ticket size={14} className="text-amber-400" />
+          <Ticket size={13} className="text-amber-400 shrink-0" />
           <span>FLIGHT NW-2026</span>
           <span className="pill-dot">•</span>
-          <Luggage size={14} className="text-cyan-400" />
+          <Luggage size={13} className="text-cyan-400 shrink-0" />
           <span>CMB ➔ WORLDWIDE</span>
           <span className="pill-dot">•</span>
           <span className="text-emerald-400 font-bold">IN FLIGHT ✈</span>
@@ -462,9 +477,9 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
         {/* Welcome Typography */}
         <div className="opening-text-group">
           <p className="opening-greeting">
-            <Sparkles size={14} className="greeting-sparkle" />
+            <Sparkles size={13} className="greeting-sparkle" />
             WELCOME TO
-            <Sparkles size={14} className="greeting-sparkle" />
+            <Sparkles size={13} className="greeting-sparkle" />
           </p>
           <h1 className="opening-brand-name">
             Nationwide <span className="brand-lanka-highlight">Lanka</span>
@@ -513,7 +528,7 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
           </div>
           <div className="opening-status-row">
             <span className="opening-status-text">
-              <Wind size={13} className="text-cyan-400 mr-1 inline" /> {getStatusMessage()}
+              <Wind size={13} className="text-cyan-400 mr-1 inline shrink-0" /> {getStatusMessage()}
             </span>
             <span className="opening-percentage">{progressPercentInt}%</span>
           </div>
