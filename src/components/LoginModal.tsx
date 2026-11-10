@@ -7,12 +7,12 @@ interface LoginModalProps {
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
   const [activeTab, setActiveTab] = useState<'traveler' | 'agent'>('traveler');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();

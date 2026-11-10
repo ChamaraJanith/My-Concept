@@ -24,9 +24,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   currency,
   onClose
 }) => {
-  if (!pkg) return null;
-
-  const [paxCount, setPaxCount] = useState<number>(pkg.minPax || 2);
+  const [paxCount, setPaxCount] = useState<number>(pkg?.minPax || 2);
   const [tier, setTier] = useState<'3-star' | '4-star'>('3-star');
   const [includeFlights, setIncludeFlights] = useState<boolean>(true);
   const [departureDate, setDepartureDate] = useState<string>('2026-11-15');
@@ -36,6 +34,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [notes, setNotes] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [bookingRef, setBookingRef] = useState<string>('');
+
+  if (!pkg) return null;
 
   // Calculate base rate per head
   let pricePerHead = pkg.basePriceLKR || 0;
