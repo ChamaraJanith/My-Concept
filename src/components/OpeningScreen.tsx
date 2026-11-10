@@ -1,65 +1,113 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { 
-  MapPin, 
-  Sparkles, 
   ArrowRight, 
   Volume2, 
   VolumeX, 
-  Luggage, 
-  Ticket, 
-  Wind 
+  Sparkles,
+  Plane,
+  Compass
 } from 'lucide-react';
 
 interface OpeningScreenProps {
   onComplete: () => void;
 }
 
+interface DestinationNode {
+  id: string;
+  code: string;
+  name: string;
+  country: string;
+  flag: string;
+  x: number;
+  y: number;
+  highlightText: string;
+}
+
 export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
   // progress goes smoothly from 0.000 to 1.000 using requestAnimationFrame
   const [progress, setProgress] = useState(0);
-  const [activeDestIndex, setActiveDestIndex] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const audioContextRef = useRef<AudioContext | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Flight Route Waypoints along the flight curve
-  const routeWaypoints = useMemo(() => [
-    { t: 0.0, code: 'CMB', city: 'Colombo', flag: '🇱🇰' },
-    { t: 0.25, code: 'BKK', city: 'Bangkok', flag: '🇹🇭' },
-    { t: 0.50, code: 'PTY', city: 'Pattaya', flag: '🇹🇭' },
-    { t: 0.75, code: 'KHL', city: 'Coral Island', flag: '🇹🇭' },
-    { t: 1.0, code: 'SFW', city: 'Safari World', flag: '🇹🇭' }
+  // Key Global Destinations plotted on our 1200 x 700 World Map coordinate system
+  const places: DestinationNode[] = useMemo(() => [
+    { id: 'cmb', code: 'CMB', name: 'Colombo', country: 'Sri Lanka', flag: '🇱🇰', x: 620, y: 470, highlightText: 'Home Hub' },
+    { id: 'dxb', code: 'DXB', name: 'Dubai', country: 'UAE', flag: '🇦🇪', x: 490, y: 350, highlightText: 'Burj Khalifa & Safari' },
+    { id: 'eur', code: 'PAR', name: 'Paris / Europe', country: 'Europe', flag: '🇪🇺', x: 280, y: 220, highlightText: 'Eiffel & Swiss Alps' },
+    { id: 'del', code: 'KSH', name: 'Kashmir & India', country: 'India', flag: '🇮🇳', x: 580, y: 280, highlightText: 'Dal Lake & Taj Mahal' },
+    { id: 'bkk', code: 'BKK', name: 'Bangkok', country: 'Thailand', flag: '🇹🇭', x: 780, y: 380, highlightText: 'Pattaya & Safari World' },
+    { id: 'vnm', code: 'HAN', name: 'Vietnam', country: 'Vietnam', flag: '🇻🇳', x: 840, y: 330, highlightText: 'Halong Bay & Da Nang' },
+    { id: 'sin', code: 'SIN', name: 'Singapore & Malaysia', country: 'Singapore', flag: '🇸🇬', x: 815, y: 490, highlightText: 'Universal & Genting' },
+    { id: 'dps', code: 'DPS', name: 'Bali', country: 'Indonesia', flag: '🇮🇩', x: 920, y: 550, highlightText: 'Nusa Penida & Temples' }
   ], []);
 
-  // Featured destinations cycling during the intro
-  const destinations = useMemo(() => [
-    { name: 'BANGKOK (3D 2N)', nights: '2 Nights', price: 'Popular Break', img: '/images/bangkok-3d2n.jpg', landmark: 'Chao Phraya Dinner Cruise' },
-    { name: 'BANGKOK (4D 3N)', nights: '3 Nights', price: 'Family Favorite', img: '/images/bangkok-4d3n.jpg', landmark: 'Safari World & Dreamworld' },
-    { name: 'BANGKOK PATTAYA (5D 4N)', nights: '4 Nights', price: 'Popular Combo', img: '/images/bangkok-pattaya-5d4n.jpg', landmark: 'Alcazar Show & Coral Island' },
-    { name: 'BANGKOK EXTRA TOUR (6D 5N)', nights: '5 Nights', price: 'Extra City Tour', img: '/images/bangkok-extra-6d5n.jpg', landmark: 'Ocean World & Madam Tussauds' },
-    { name: 'BANGKOK PHUKET (5D 4N)', nights: '4 Nights', price: 'Island & City', img: '/images/bangkok-phuket-5d4n.jpg', landmark: 'Phi Phi / James Bond Island' },
-    { name: 'BANGKOK PATTAYA (7D 6N)', nights: '6 Nights', price: 'Ultimate Holiday', img: '/images/bangkok-pattaya-7d6n.jpg', landmark: 'Tiger Park & Sanctuary of Truth' }
-  ], []);
+  // Define the multi-leg flight legs connecting all places with curved great-circle control arcs
+  // Arc curvature: positive or negative offset perpendicular to the chord
+  const flightLegs = useMemo(() => {
+    const legs = [];
+    for (let i = 0; i < places.length - 1; i++) {
+      const from = places[i];
+      const to = places[i + 1];
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const len = Math.hypot(dx, dy);
+      // Perpendicular unit vector (-dy/len, dx/len)
+      const nx = -dy / len;
+      const ny = dx / len;
+      // Arc curvature height (curves northward for great-circle appearance)
+      const arcHeight = Math.min(65, len * 0.22);
+      const cx = (from.x + to.x) / 2 + nx * arcHeight;
+      const cy = (from.y + to.y) / 2 + ny * arcHeight;
 
-  // Mathematical Bezier Curve Coordinates for the Sky Flight Arc (ViewBox 1200 x 700)
-  const p0x = 100, p0y = 580; // Colombo Airport
-  const p1x = 550, p1y = 440; // Mid-climb control point
-  const p2x = 1100, p2y = 120; // High cruise altitude destination
+      legs.push({ from, to, cx, cy });
+    }
+    return legs;
+  }, [places]);
 
-  // Calculate current plane position along the bezier curve with floating point precision
-  const t = Math.min(1, Math.max(0, progress));
-  const currentPlaneX = (1 - t) * (1 - t) * p0x + 2 * (1 - t) * t * p1x + t * t * p2x;
-  const currentPlaneY = (1 - t) * (1 - t) * p0y + 2 * (1 - t) * t * p1y + t * t * p2y;
+  const totalLegs = flightLegs.length;
 
-  // Calculate instantaneous tangent vector (heading direction)
-  const dx = 2 * (1 - t) * (p1x - p0x) + 2 * t * (p2x - p1x);
-  const dy = 2 * (1 - t) * (p1y - p0y) + 2 * t * (p2y - p1y);
-  // Tangent angle in degrees: Nose points EXACTLY along this angle!
-  const planeHeadingAngle = (Math.atan2(dy, dx) * 180) / Math.PI;
+  // Calculate current airplane position & heading angle along the multi-curve trajectory
+  const { currentX, currentY, headingAngle, activePlaceIndex, passedPlaces } = useMemo(() => {
+    const t = Math.min(1, Math.max(0, progress));
+    // Which leg are we on?
+    const floatIndex = t * totalLegs;
+    const legIndex = Math.min(totalLegs - 1, Math.floor(floatIndex));
+    // Sub-progress within this leg [0, 1]
+    const legT = Math.min(1, Math.max(0, floatIndex - legIndex));
 
-  // Play airport chime (two-tone gentle ding-dong)
-  const playAirportChime = () => {
+    const currentLeg = flightLegs[legIndex];
+    const { from, to, cx, cy } = currentLeg;
+
+    // Quadratic Bezier formula for this leg:
+    const inv = 1 - legT;
+    const x = inv * inv * from.x + 2 * inv * legT * cx + legT * legT * to.x;
+    const y = inv * inv * from.y + 2 * inv * legT * cy + legT * legT * to.y;
+
+    // Tangent derivative for heading angle
+    const dX = 2 * inv * (cx - from.x) + 2 * legT * (to.x - cx);
+    const dY = 2 * inv * (cy - from.y) + 2 * legT * (to.y - cy);
+    const angle = (Math.atan2(dY, dX) * 180) / Math.PI;
+
+    // Which place is currently targeted / active?
+    const currentActive = legT > 0.5 ? Math.min(places.length - 1, legIndex + 1) : legIndex;
+    const passed = new Set<string>();
+    for (let i = 0; i <= currentActive; i++) {
+      passed.add(places[i].id);
+    }
+
+    return {
+      currentX: x,
+      currentY: y,
+      headingAngle: angle,
+      activePlaceIndex: currentActive,
+      passedPlaces: passed
+    };
+  }, [progress, totalLegs, flightLegs, places]);
+
+  // Audio effects
+  const playAirportChime = useCallback(() => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) return;
@@ -68,38 +116,35 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       if (ctx.state === 'suspended') ctx.resume();
 
       const now = ctx.currentTime;
-      // Tone 1: High chime (587.33 Hz - D5)
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       osc1.type = 'sine';
       osc1.frequency.setValueAtTime(587.33, now);
       gain1.gain.setValueAtTime(0.001, now);
-      gain1.gain.exponentialRampToValueAtTime(0.14, now + 0.05);
-      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+      gain1.gain.exponentialRampToValueAtTime(0.12, now + 0.04);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
       osc1.connect(gain1);
       gain1.connect(ctx.destination);
       osc1.start(now);
-      osc1.stop(now + 0.9);
+      osc1.stop(now + 0.8);
 
-      // Tone 2: Harmonious second tone (440 Hz - A4)
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
       osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(440, now + 0.45);
-      gain2.gain.setValueAtTime(0.001, now + 0.45);
-      gain2.gain.exponentialRampToValueAtTime(0.16, now + 0.52);
-      gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+      osc2.frequency.setValueAtTime(440, now + 0.35);
+      gain2.gain.setValueAtTime(0.001, now + 0.35);
+      gain2.gain.exponentialRampToValueAtTime(0.14, now + 0.42);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
       osc2.connect(gain2);
       gain2.connect(ctx.destination);
-      osc2.start(now + 0.45);
-      osc2.stop(now + 1.4);
+      osc2.start(now + 0.35);
+      osc2.stop(now + 1.2);
     } catch {
       // Audio autoplay gracefully handled
     }
-  };
+  }, []);
 
-  // Play gentle jet engine whoosh sound
-  const playJetWhoosh = () => {
+  const playJetWhoosh = useCallback(() => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) return;
@@ -107,7 +152,7 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       audioContextRef.current = ctx;
       if (ctx.state === 'suspended') ctx.resume();
 
-      const bufferSize = ctx.sampleRate * 2;
+      const bufferSize = ctx.sampleRate * 1.5;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
@@ -119,25 +164,34 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
 
       const filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(300, ctx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 1.1);
-      filter.Q.value = 1.8;
+      filter.frequency.setValueAtTime(260, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(680, ctx.currentTime + 0.8);
+      filter.Q.value = 1.6;
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.001, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.35);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.7);
+      gain.gain.exponentialRampToValueAtTime(0.10, ctx.currentTime + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
 
       noise.connect(filter);
       filter.connect(gain);
       gain.connect(ctx.destination);
 
       noise.start();
-      noise.stop(ctx.currentTime + 1.7);
+      noise.stop(ctx.currentTime + 1.4);
     } catch {
       // Graceful fallback
     }
-  };
+  }, []);
+
+  const handleEnter = useCallback(() => {
+    if (isClosing) return;
+    setIsClosing(true);
+    if (soundEnabled) playJetWhoosh();
+    setTimeout(() => {
+      onComplete();
+    }, 1050);
+  }, [isClosing, soundEnabled, onComplete, playJetWhoosh]);
 
   useEffect(() => {
     if (soundEnabled) {
@@ -146,14 +200,11 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       }, 500);
       return () => clearTimeout(chimeTimer);
     }
-  }, [soundEnabled]);
+  }, [soundEnabled, playAirportChime]);
 
-  // =========================================================================
-  // ULTRA-SMOOTH 60FPS/120FPS REQUESTANIMATIONFRAME FLIGHT LOOP
-  // Uses time delta and easing for silky-smooth, stutter-free movement!
-  // =========================================================================
+  // Smooth 60FPS / 120FPS Animation loop
   useEffect(() => {
-    const TOTAL_DURATION_MS = 6800; // 6.8 seconds total smooth flight
+    const TOTAL_DURATION_MS = 8200; // 8.2 seconds for full journey
     let startTime: number | null = null;
 
     const animateFlight = (timestamp: number) => {
@@ -161,7 +212,7 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       const elapsed = timestamp - startTime;
       const rawLinearProgress = Math.min(1, elapsed / TOTAL_DURATION_MS);
 
-      // Smooth ease-in-out curve for natural aerodynamic acceleration and deceleration
+      // Smooth ease for natural acceleration & deceleration
       const eased = rawLinearProgress < 0.5
         ? 2 * rawLinearProgress * rawLinearProgress
         : 1 - Math.pow(-2 * rawLinearProgress + 2, 2) / 2;
@@ -171,11 +222,9 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
       if (rawLinearProgress < 1) {
         animFrameRef.current = requestAnimationFrame(animateFlight);
       } else {
-        // Complete flight!
-        if (soundEnabled) playJetWhoosh();
         setTimeout(() => {
           handleEnter();
-        }, 650);
+        }, 500);
       }
     };
 
@@ -186,41 +235,13 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, []);
+  }, [handleEnter]);
 
-  // Cycle destination previews every 1.15s smoothly
-  useEffect(() => {
-    const destInterval = setInterval(() => {
-      setActiveDestIndex((prev) => (prev + 1) % destinations.length);
-    }, 1150);
-
-    return () => clearInterval(destInterval);
-  }, [destinations.length]);
-
-  const handleEnter = () => {
-    if (isClosing) return;
-    setIsClosing(true);
-    if (soundEnabled) playJetWhoosh();
-    setTimeout(() => {
-      onComplete();
-    }, 1150); // 1.15s smooth curtain reveal
-  };
-
-  // Status message corresponding to progress
-  const getStatusMessage = () => {
-    if (t < 0.20) return 'Colombo (CMB) Runway 04: Clearance confirmed...';
-    if (t < 0.45) return 'Full Throttle: Climbing through 10,000 feet...';
-    if (t < 0.70) return 'Cruising Altitude: Approaching Asian archipelagos...';
-    if (t < 0.95) return 'Cabin Announcement: Prepare for scenic arrival...';
-    return 'Welcome aboard! Touching down at Nationwide Lanka...';
-  };
-
-  const currentDest = destinations[activeDestIndex];
-  const progressPercentInt = Math.min(100, Math.round(t * 100));
+  const activePlace = places[activePlaceIndex];
 
   return (
     <div className={`opening-splash-wrapper ${isClosing ? 'opening-curtain-open' : ''}`}>
-      {/* Top & Bottom Sliding Luxury Velvet Curtains with 3D hardware acceleration */}
+      {/* Top & Bottom Sliding Luxury Velvet Curtains */}
       <div className="curtain-half curtain-top">
         <div className="curtain-fabric-lines"></div>
       </div>
@@ -228,208 +249,11 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
         <div className="curtain-fabric-lines"></div>
       </div>
 
-      {/* =========================================================
-          MATHEMATICALLY SYNCHRONIZED SVG SKY FLIGHT SYSTEM
-          Both the trajectory line and the airplane live in the exact
-          same coordinate space (1200 x 700), guaranteeing 100% alignment!
-          ========================================================= */}
-      <div className="sky-flight-svg-container">
-        <svg 
-          viewBox="0 0 1200 700" 
-          className="sky-flight-canvas"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            {/* Contrail Glowing Gradient */}
-            <linearGradient id="contrailGlowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(56, 189, 248, 0.05)" />
-              <stop offset="60%" stopColor="rgba(56, 189, 248, 0.45)" />
-              <stop offset="100%" stopColor="#ffffff" />
-            </linearGradient>
-
-            {/* Jet Fuselage Gradient */}
-            <linearGradient id="jetBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#cbd5e1" />
-              <stop offset="30%" stopColor="#ffffff" />
-              <stop offset="85%" stopColor="#f8fafc" />
-              <stop offset="100%" stopColor="#e2e8f0" />
-            </linearGradient>
-
-            {/* Wing Gradient */}
-            <linearGradient id="jetWingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#f8fafc" />
-              <stop offset="50%" stopColor="#e2e8f0" />
-              <stop offset="100%" stopColor="#94a3b8" />
-            </linearGradient>
-
-            {/* Engine Thrust Glow */}
-            <linearGradient id="thrustGlowGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="50%" stopColor="rgba(56, 189, 248, 0.6)" />
-              <stop offset="100%" stopColor="transparent" />
-            </linearGradient>
-          </defs>
-
-          {/* Background Reference Flight Path (Dashed Guide) */}
-          <path 
-            d={`M ${p0x},${p0y} Q ${p1x},${p1y} ${p2x},${p2y}`}
-            fill="none"
-            stroke="rgba(56, 189, 248, 0.15)"
-            strokeWidth="2"
-            strokeDasharray="6 6"
-          />
-
-          {/* Active Jet Contrail (Starts at Colombo and touches the plane's engines in continuous sub-pixels) */}
-          <path 
-            d={`M ${p0x},${p0y} Q ${p1x},${p1y} ${p2x},${p2y}`}
-            fill="none"
-            stroke="url(#contrailGlowGrad)"
-            strokeWidth="3.5"
-            pathLength="100"
-            strokeDasharray={`${t * 100} 100`}
-            strokeLinecap="round"
-            filter="drop-shadow(0 0 8px rgba(56, 189, 248, 0.8))"
-          />
-
-          {/* Route Waypoint Nodes along the Path */}
-          {routeWaypoints.map((wp) => {
-            const wpt = wp.t;
-            const wx = (1 - wpt) * (1 - wpt) * p0x + 2 * (1 - wpt) * wpt * p1x + wpt * wpt * p2x;
-            const wy = (1 - wpt) * (1 - wpt) * p0y + 2 * (1 - wpt) * wpt * p1x + wpt * wpt * p2y;
-            const isPassed = t >= wpt;
-            const isCurrent = Math.abs(t - wpt) < 0.08;
-
-            return (
-              <g key={wp.code} transform={`translate(${wx}, ${wy})`}>
-                <circle 
-                  r={isCurrent ? "8" : "4.5"} 
-                  fill={isCurrent ? "#38bdf8" : isPassed ? "#0ea5e9" : "#334155"} 
-                  stroke="#ffffff"
-                  strokeWidth={isCurrent ? "2" : "1"}
-                  className={isCurrent ? "wp-circle-pulse" : ""}
-                />
-                <text 
-                  x="0" 
-                  y={wy > 350 ? "20" : "-14"} 
-                  textAnchor="middle" 
-                  fill={isCurrent ? "#ffffff" : isPassed ? "#93c5fd" : "#64748b"}
-                  fontSize="12"
-                  fontWeight="700"
-                  fontFamily="monospace"
-                >
-                  {wp.code} {wp.flag}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* =======================================================
-              COMMERCIAL AIRLINER JET (FLUID SUB-PIXEL MOTION)
-              Modeled pointing EAST (0°), then rotated by planeHeadingAngle!
-              Nose points 100% PERFECTLY in the direction of flight!
-              ======================================================= */}
-          <g 
-            transform={`translate(${currentPlaneX.toFixed(2)}, ${currentPlaneY.toFixed(2)}) rotate(${planeHeadingAngle.toFixed(2)}) ${isClosing ? 'scale(2.8) translate(140, 0)' : 'scale(1)'}`}
-            className="commercial-jet-group"
-            style={{ 
-              transition: isClosing ? 'transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease' : 'none' 
-            }}
-          >
-            {/* Twin Engine Vapor Exhaust Trails (Trailing behind engines along -X) */}
-            <line 
-              x1="-24" 
-              y1="-22" 
-              x2="-95" 
-              y2="-22" 
-              stroke="url(#thrustGlowGrad)" 
-              strokeWidth="4" 
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <line 
-              x1="-24" 
-              y1="22" 
-              x2="-95" 
-              y2="22" 
-              stroke="url(#thrustGlowGrad)" 
-              strokeWidth="4" 
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-
-            {/* Swept-back Wings (Port & Starboard) */}
-            {/* Starboard Wing (Bottom) */}
-            <polygon 
-              points="10,7 -20,62 -32,58 -10,7" 
-              fill="url(#jetWingGrad)" 
-              stroke="#64748b" 
-              strokeWidth="0.8" 
-            />
-            {/* Port Wing (Top) */}
-            <polygon 
-              points="10,-7 -20,-62 -32,-58 -10,-7" 
-              fill="url(#jetWingGrad)" 
-              stroke="#64748b" 
-              strokeWidth="0.8" 
-            />
-
-            {/* Jet Turbofan Engines under wings */}
-            {/* Starboard Engine */}
-            <rect x="-18" y="17" width="22" height="10" rx="4" fill="#334155" stroke="#475569" strokeWidth="0.8" />
-            <ellipse cx="4" cy="22" rx="2" ry="4" fill="#38bdf8" />
-            {/* Port Engine */}
-            <rect x="-18" y="-27" width="22" height="10" rx="4" fill="#334155" stroke="#475569" strokeWidth="0.8" />
-            <ellipse cx="4" cy="-22" rx="2" ry="4" fill="#38bdf8" />
-
-            {/* Horizontal Tail Stabilizers */}
-            <polygon points="-36,-3 -55,-22 -60,-19 -44,-3" fill="#cbd5e1" />
-            <polygon points="-36,3 -55,22 -60,19 -44,3" fill="#cbd5e1" />
-
-            {/* Main Streamlined Fuselage (Aircraft Body) */}
-            {/* Nose is at (+60, 0), Tail is at (-52, 0) */}
-            <path 
-              d="M 60,0 C 45,-8 -25,-8 -50,-4 C -54,-2 -54,2 -50,4 C -25,8 45,8 60,0 Z" 
-              fill="url(#jetBodyGrad)" 
-              stroke="#94a3b8" 
-              strokeWidth="1" 
-            />
-
-            {/* Nationwide Airline Blue Cheatline Livery */}
-            <path 
-              d="M 38,-3 L -35,-3 L -35,3 L 38,3 Z" 
-              fill="#1e60f2" 
-            />
-
-            {/* Cockpit Windshield (Black tinted glass facing nose at right) */}
-            <path 
-              d="M 46,-2.5 Q 52,0 46,2.5 Q 43,0 46,-2.5 Z" 
-              fill="#0f172a" 
-            />
-
-            {/* Vertical Tail Fin */}
-            <polygon points="-35,0 -52,0 -56,-14 -44,-12" fill="#1e60f2" />
-
-            {/* Navigation Strobe Lights */}
-            {/* Starboard wingtip: Green */}
-            <circle cx="-26" cy="60" r="3" fill="#22c55e" className="svg-strobe-green" />
-            {/* Port wingtip: Red */}
-            <circle cx="-26" cy="-60" r="3" fill="#ef4444" className="svg-strobe-red" />
-            {/* Tail beacon: White */}
-            <circle cx="-52" cy="0" r="2.5" fill="#ffffff" className="svg-strobe-white" />
-          </g>
-        </svg>
-      </div>
-
-      {/* Floating Animated Cloud Layers */}
-      <div className="clouds-layer clouds-layer-1"></div>
-      <div className="clouds-layer clouds-layer-2"></div>
-
-      {/* Ambient Blue & Cyan Glow Spots */}
+      {/* Ambient Deep Blue Backlight */}
       <div className="opening-ambient-glow glow-blue-1"></div>
       <div className="opening-ambient-glow glow-blue-2"></div>
-      <div className="opening-ambient-glow glow-blue-3"></div>
 
-      {/* Sound Toggle (Top Right) */}
+      {/* Sound Toggle */}
       <button 
         type="button" 
         onClick={() => {
@@ -446,20 +270,250 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
         <span>{soundEnabled ? 'Sound On' : 'Muted'}</span>
       </button>
 
-      {/* Main Center Cinematic Content */}
-      <div className="opening-content-box">
-        {/* Boarding Pass Header Badge */}
-        <div className="boarding-pass-pill">
-          <Ticket size={14} className="text-amber-400" />
-          <span>FLIGHT NW-2026</span>
-          <span className="pill-dot">•</span>
-          <Luggage size={14} className="text-cyan-400" />
-          <span>CMB ➔ WORLDWIDE</span>
-          <span className="pill-dot">•</span>
-          <span className="text-emerald-400 font-bold">IN FLIGHT ✈</span>
-        </div>
+      {/* =========================================================================
+          WORLD MAP RADAR FLIGHT CANVAS
+          Real world map backdrop with curved geodesic flight paths and place nodes
+          ========================================================================= */}
+      <div className="world-map-flight-canvas-container">
+        <svg 
+          viewBox="0 0 1200 700" 
+          className="world-map-svg"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            {/* Gradients */}
+            <radialGradient id="radarPulseGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(245, 158, 11, 0.6)" />
+              <stop offset="60%" stopColor="rgba(245, 158, 11, 0.15)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
 
-        {/* Welcome Typography */}
+            <linearGradient id="flightArcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.95" />
+            </linearGradient>
+
+            <linearGradient id="jetFuselage" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#cbd5e1" />
+              <stop offset="40%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#f1f5f9" />
+            </linearGradient>
+
+            <linearGradient id="jetThrustGlow" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="60%" stopColor="rgba(56, 189, 248, 0.7)" />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+          </defs>
+
+          {/* 1. Global Geodesic Longitude & Latitude Graticule Grid */}
+          <g className="world-map-grid" opacity="0.16">
+            {/* Latitude parallels */}
+            <line x1="0" y1="140" x2="1200" y2="140" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="0" y1="260" x2="1200" y2="260" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="0" y1="380" x2="1200" y2="380" stroke="#38bdf8" strokeWidth="1" /> {/* Equator / Subtropical */}
+            <line x1="0" y1="500" x2="1200" y2="500" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="0" y1="620" x2="1200" y2="620" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+
+            {/* Longitude meridians */}
+            <line x1="150" y1="0" x2="150" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="300" y1="0" x2="300" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="450" y1="0" x2="450" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="600" y1="0" x2="600" y2="700" stroke="#38bdf8" strokeWidth="1" /> {/* Prime Meridian Area */}
+            <line x1="750" y1="0" x2="750" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="900" y1="0" x2="900" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+            <line x1="1050" y1="0" x2="1050" y2="700" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="4 8" />
+          </g>
+
+          {/* 2. Stylized World Map Continents Outline (Silhouette Art) */}
+          <g className="world-continents-art" fill="rgba(15, 30, 60, 0.45)" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1.2">
+            {/* Europe Landmass */}
+            <path d="M 220,160 Q 260,140 310,150 T 350,180 T 330,240 T 270,260 T 230,220 Z" />
+            <path d="M 235,145 Q 255,130 260,160 T 240,175 Z" /> {/* UK & Ireland */}
+
+            {/* Africa Landmass */}
+            <path d="M 270,290 Q 340,290 370,350 T 380,450 T 330,550 T 290,520 T 250,380 T 260,310 Z" />
+
+            {/* Middle East & Arabian Peninsula */}
+            <path d="M 430,290 Q 480,280 510,320 T 520,380 T 470,390 T 440,340 Z" />
+
+            {/* India & South Asia Peninsula */}
+            <path d="M 540,240 Q 610,230 630,280 T 650,360 T 630,440 T 590,440 T 550,360 T 530,280 Z" />
+            {/* Sri Lanka Pearl */}
+            <ellipse cx="620" cy="470" rx="9" ry="14" fill="rgba(245, 158, 11, 0.35)" stroke="#f59e0b" strokeWidth="1.5" />
+
+            {/* Central & East Asia */}
+            <path d="M 640,200 Q 750,180 880,200 T 960,260 T 920,320 T 800,310 T 680,270 Z" />
+
+            {/* Southeast Asia & Indochina (Thailand / Vietnam / Malaysia) */}
+            <path d="M 740,320 Q 820,310 850,340 T 830,420 T 790,450 T 760,390 Z" />
+            {/* Malay Peninsula & Singapore */}
+            <path d="M 780,430 Q 810,450 820,490 T 800,500 T 780,460 Z" />
+
+            {/* Indonesian Archipelago & Bali Islands */}
+            <ellipse cx="860" cy="530" rx="28" ry="7" />
+            <ellipse cx="920" cy="550" rx="14" ry="6" fill="rgba(245, 158, 11, 0.35)" stroke="#f59e0b" strokeWidth="1.2" /> {/* Bali */}
+            <ellipse cx="980" cy="540" rx="40" ry="9" />
+
+            {/* Australia Silhouette */}
+            <path d="M 980,590 Q 1060,570 1100,610 T 1070,680 T 990,670 T 960,620 Z" />
+          </g>
+
+          {/* 3. Curved Flight Arcs Connecting Every Place (Non-linear Great Circle Arcs) */}
+          <g className="flight-route-arcs">
+            {flightLegs.map((leg, idx) => {
+              const pathD = `M ${leg.from.x},${leg.from.y} Q ${leg.cx},${leg.cy} ${leg.to.x},${leg.to.y}`;
+              return (
+                <g key={`leg-${idx}`}>
+                  {/* Subtle Background Guide Arc */}
+                  <path 
+                    d={pathD} 
+                    fill="none" 
+                    stroke="rgba(56, 189, 248, 0.18)" 
+                    strokeWidth="1.8" 
+                    strokeDasharray="5 7" 
+                  />
+                  {/* Glow Active Trajectory Arc */}
+                  <path 
+                    d={pathD} 
+                    fill="none" 
+                    stroke="url(#flightArcGlow)" 
+                    strokeWidth="2.5" 
+                    strokeDasharray="8 8"
+                    className="animated-flight-dash"
+                  />
+                </g>
+              );
+            })}
+          </g>
+
+          {/* 4. Destination Places Markers & Labels on the World Map */}
+          <g className="destination-nodes-group">
+            {places.map((place, idx) => {
+              const isCurrent = activePlaceIndex === idx;
+              const isPassed = passedPlaces.has(place.id);
+              const isHomeHub = place.id === 'cmb';
+
+              return (
+                <g 
+                  key={place.id} 
+                  transform={`translate(${place.x}, ${place.y})`}
+                  className={`destination-map-node ${isCurrent ? 'node-active' : isPassed ? 'node-visited' : ''}`}
+                >
+                  {/* Radar Wave Pulse Ring on Current Place */}
+                  {isCurrent && (
+                    <circle 
+                      r="24" 
+                      fill="url(#radarPulseGrad)" 
+                      className="node-radar-wave" 
+                    />
+                  )}
+
+                  {/* Outer Glowing Ring */}
+                  <circle 
+                    r={isCurrent ? "10" : isHomeHub ? "8" : "6"} 
+                    fill={isCurrent ? "#f59e0b" : isPassed ? "#38bdf8" : "#1e293b"} 
+                    stroke={isCurrent ? "#ffffff" : isPassed ? "#93c5fd" : "#475569"} 
+                    strokeWidth={isCurrent ? "2.5" : "1.5"}
+                    filter={isCurrent ? "drop-shadow(0 0 10px #f59e0b)" : "none"}
+                  />
+
+                  {/* Center Dot */}
+                  <circle 
+                    r={isCurrent ? "4" : "2.5"} 
+                    fill={isCurrent ? "#ffffff" : "#0f172a"} 
+                  />
+
+                  {/* Place City Name, Flag & Code Banner */}
+                  <g transform={`translate(0, ${place.y > 450 ? 24 : -18})`}>
+                    <rect 
+                      x="-55" 
+                      y="-12" 
+                      width="110" 
+                      height="24" 
+                      rx="12" 
+                      fill={isCurrent ? "rgba(15, 23, 42, 0.95)" : "rgba(15, 23, 42, 0.75)"} 
+                      stroke={isCurrent ? "#f59e0b" : isPassed ? "rgba(56, 189, 248, 0.4)" : "rgba(255, 255, 255, 0.15)"}
+                      strokeWidth={isCurrent ? "1.5" : "1"}
+                    />
+                    <text 
+                      x="0" 
+                      y="4" 
+                      textAnchor="middle" 
+                      fill={isCurrent ? "#ffffff" : isPassed ? "#cbd5e1" : "#94a3b8"}
+                      fontSize="11" 
+                      fontWeight={isCurrent ? "800" : "600"}
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                      {place.flag} {place.name}
+                    </text>
+                  </g>
+                </g>
+              );
+            })}
+          </g>
+
+          {/* 5. The Commercial Jet Airliner Flying Across Curved Trajectories */}
+          <g 
+            transform={`translate(${currentX.toFixed(2)}, ${currentY.toFixed(2)}) rotate(${headingAngle.toFixed(2)}) ${isClosing ? 'scale(2.5) translate(80, 0)' : 'scale(1)'}`}
+            className="airliner-jet-svg"
+            style={{ 
+              transition: isClosing ? 'transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease' : 'none' 
+            }}
+          >
+            {/* Dual Glowing Engine Jet Vapor Exhaust (Orange/Cyan flame) */}
+            <line x1="-16" y1="-16" x2="-80" y2="-16" stroke="url(#jetThrustGlow)" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
+            <line x1="-16" y1="16" x2="-80" y2="16" stroke="url(#jetThrustGlow)" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
+
+            {/* Swept Wings */}
+            <polygon points="8,6 -15,48 -24,45 -8,6" fill="#e2e8f0" stroke="#64748b" strokeWidth="0.8" />
+            <polygon points="8,-6 -15,-48 -24,-45 -8,-6" fill="#e2e8f0" stroke="#64748b" strokeWidth="0.8" />
+
+            {/* Jet Turbofan Engines */}
+            <rect x="-14" y="12" width="18" height="8" rx="3" fill="#1e293b" />
+            <ellipse cx="4" cy="16" rx="2" ry="3.5" fill="#f59e0b" />
+            <rect x="-14" y="-20" width="18" height="8" rx="3" fill="#1e293b" />
+            <ellipse cx="4" cy="-16" rx="2" ry="3.5" fill="#f59e0b" />
+
+            {/* Horizontal Stabilizers */}
+            <polygon points="-28,-2 -44,-16 -48,-14 -35,-2" fill="#cbd5e1" />
+            <polygon points="-28,2 -44,16 -48,14 -35,2" fill="#cbd5e1" />
+
+            {/* Fuselage / Aircraft Body */}
+            <path 
+              d="M 48,0 C 35,-6 -20,-6 -40,-3 C -44,-1.5 -44,1.5 -40,3 C -20,6 35,6 48,0 Z" 
+              fill="url(#jetFuselage)" 
+              stroke="#64748b" 
+              strokeWidth="0.8" 
+            />
+
+            {/* Nationwide Airline Gold Cheatline */}
+            <path d="M 30,-2 L -28,-2 L -28,2 L 30,2 Z" fill="#f59e0b" />
+
+            {/* Cockpit Windshield */}
+            <path d="M 36,-2 Q 42,0 36,2 Q 33,0 36,-2 Z" fill="#0f172a" />
+
+            {/* Vertical Tail Fin */}
+            <polygon points="-28,0 -42,0 -45,-12 -35,-10" fill="#0284c7" />
+
+            {/* Flashing Strobe Lights */}
+            <circle cx="-20" cy="46" r="2.5" fill="#22c55e" className="svg-strobe-green" />
+            <circle cx="-20" cy="-46" r="2.5" fill="#ef4444" className="svg-strobe-red" />
+            <circle cx="-42" cy="0" r="2" fill="#ffffff" className="svg-strobe-white" />
+          </g>
+        </svg>
+      </div>
+
+      {/* Floating Ambient Atmosphere Dust */}
+      <div className="clouds-layer clouds-layer-1"></div>
+
+      {/* =========================================================================
+          CLEAN CINEMATIC BRANDING & FLIGHT STATUS OVERLAY
+          No clutter, pure focus on Places & Journey
+          ========================================================================= */}
+      <div className="opening-content-box world-map-overlay-box">
+        {/* Welcome Branding */}
         <div className="opening-text-group">
           <p className="opening-greeting">
             <Sparkles size={14} className="greeting-sparkle" />
@@ -470,66 +524,42 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
             Nationwide <span className="brand-lanka-highlight">Lanka</span>
           </h1>
           <p className="opening-tagline">
-            Your Premier Gateway to Unforgettable International Journeys
+            Connecting Sri Lanka to the World's Most Iconic Destinations
           </p>
         </div>
 
-        {/* TOURISM SHOWCASE: Live Destination Preview Carousel Card with smooth crossfade */}
-        <div className="destination-preview-card">
-          <div className="dest-preview-image-wrap">
-            <img 
-              key={currentDest.name}
-              src={currentDest.img} 
-              alt={currentDest.name} 
-              className="dest-preview-image" 
-            />
-            <div className="dest-preview-overlay"></div>
-            <span className="dest-live-tag">
-              <MapPin size={12} /> Exploring Destination
-            </span>
+        {/* Dynamic Current Destination Tracker Pill */}
+        <div className="current-place-flight-pill">
+          <div className="flight-status-icon-wrap">
+            <Plane size={16} className="text-amber-400 rotate-45" />
           </div>
-
-          <div className="dest-preview-info">
-            <div className="dest-preview-title-row">
-              <h3 className="dest-preview-name">{currentDest.name}</h3>
-              <span className="dest-preview-price">{currentDest.price}</span>
+          <div className="flight-destination-details">
+            <span className="flight-status-tag">FLIGHT NW-2026 EN ROUTE</span>
+            <div className="flight-city-headline">
+              <span className="destination-flag">{activePlace.flag}</span>
+              <strong className="destination-name">{activePlace.name}</strong>
+              <span className="destination-sub-code">({activePlace.code})</span>
+              <span className="destination-highlight-pill">{activePlace.highlightText}</span>
             </div>
-            <p className="dest-preview-meta">
-              <span>{currentDest.landmark}</span> • <strong>{currentDest.nights}</strong>
-            </p>
-          </div>
-
-          {/* Destination Mini Indicator Dots */}
-          <div className="dest-dots-bar">
-            {destinations.map((_, idx) => (
-              <span 
-                key={idx} 
-                className={`dest-dot ${idx === activeDestIndex ? 'active' : ''}`}
-                onClick={() => setActiveDestIndex(idx)}
-              />
-            ))}
           </div>
         </div>
 
-        {/* Progress Bar & Realtime Flight Status */}
-        <div className="opening-loader-container">
-          <div className="opening-loader-track">
-            <div 
-              className="opening-loader-fill" 
-              style={{ width: `${t * 100}%` }}
-            >
-              <div className="loader-shimmer-highlight"></div>
-            </div>
-          </div>
-          <div className="opening-status-row">
-            <span className="opening-status-text">
-              <Wind size={13} className="text-cyan-400 mr-1 inline" /> {getStatusMessage()}
-            </span>
-            <span className="opening-percentage">{progressPercentInt}%</span>
-          </div>
+        {/* Global Places Breadcrumb Strip */}
+        <div className="places-breadcrumb-strip">
+          {places.map((p, i) => (
+            <React.Fragment key={p.id}>
+              <span className={`place-strip-chip ${i === activePlaceIndex ? 'active' : passedPlaces.has(p.id) ? 'passed' : ''}`}>
+                <span className="chip-flag">{p.flag}</span>
+                <span className="chip-code">{p.code}</span>
+              </span>
+              {i < places.length - 1 && (
+                <span className="chip-arrow">›</span>
+              )}
+            </React.Fragment>
+          ))}
         </div>
 
-        {/* Interactive Enter / Skip Button */}
+        {/* Enter Site Button */}
         <div className="opening-actions-row">
           <button
             type="button"
@@ -537,6 +567,7 @@ export const OpeningScreen: React.FC<OpeningScreenProps> = ({ onComplete }) => {
             className="opening-enter-btn"
             id="enter-site-btn"
           >
+            <Compass size={17} />
             <span>Touch Down & Explore Tours</span>
             <ArrowRight size={17} />
           </button>
