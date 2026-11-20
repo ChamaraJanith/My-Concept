@@ -159,7 +159,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     },
     {
       q: 'Can I pay for my holiday in monthly credit card installments?',
-      a: 'Absolutely! We offer 0% interest installment plans up to 12, 24, or 36 months with leading Sri Lankan banks including Commercial Bank, Sampath Bank, HNB, Nations Trust Bank, and Seylan Bank.'
+      a: 'Absolutely! We offer 0% interest installment plans up to 12, 24, or 36 months with leading Sri Lankan banks including Commercial Bank, Sampath Bank, HNB, Nations Trust Bank, DFCC Bank, and Seylan Bank.'
     },
     {
       q: 'How early should I apply for my overseas visa?',

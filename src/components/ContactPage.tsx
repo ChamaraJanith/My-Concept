@@ -393,6 +393,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <li>✓ Sampath Bank (Credit Cards)</li>
                   <li>✓ Hatton National Bank - HNB</li>
                   <li>✓ Nations Trust Bank - American Express (Amex)</li>
+                  <li>✓ DFCC Bank (Credit Cards)</li>
                   <li>✓ Seylan Bank & Standard Chartered</li>
                 </ul>
               </div>

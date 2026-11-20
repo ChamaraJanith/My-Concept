@@ -5,6 +5,7 @@ import { Navbar, type PageType } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { PackagesSection } from './components/PackagesSection';
 import { PromotionBanner } from './components/PromotionBanner';
+import { EuropeVisaFlightsSection } from './components/EuropeVisaFlightsSection';
 import { ServicesSection } from './components/ServicesSection';
 import { AboutSection } from './components/AboutSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
@@ -277,6 +278,12 @@ export function App() {
           <PromotionBanner 
             onSeePromotions={handleSeePromotions} 
             onOpenPromoVideo={handleOpenPromoVideo}
+          />
+
+          {/* 5.1 Europe Schengen Visa & Direct Air Ticketing Specialist Section */}
+          <EuropeVisaFlightsSection 
+            onExploreEuropeTours={() => handleOpenAllTours('europe')}
+            onContactClick={handlePlanTrip}
           />
 
           {/* 6. Our Services Section */}
