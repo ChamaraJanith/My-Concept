@@ -26,7 +26,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 }) => {
   const stats = [
     {
-      value: '12+',
+      value: '5+',
       label: 'Years of Excellence',
       sub: 'Trusted outbound travel firm in Sri Lanka'
     },
@@ -220,7 +220,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   </div>
                   <div className="point-item">
                     <CheckCircle2 size={18} className="text-amber-500 shrink-0" />
-                    <span>Direct ground operations in 12+ international destinations.</span>
+                    <span>Direct ground operations in 5+ international destinations.</span>
                   </div>
                   <div className="point-item">
                     <CheckCircle2 size={18} className="text-amber-500 shrink-0" />

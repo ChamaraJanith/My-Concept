@@ -1,15 +1,15 @@
 import React from 'react';
-import { 
-  Award, 
-  ShieldCheck, 
-  Compass, 
-  CheckCircle2, 
-  Sparkles, 
-  PhoneCall, 
-  ArrowRight, 
-  Star, 
-  Building2, 
-  HeartHandshake, 
+import {
+  Award,
+  ShieldCheck,
+  Compass,
+  CheckCircle2,
+  Sparkles,
+  PhoneCall,
+  ArrowRight,
+  Star,
+  Building2,
+  HeartHandshake,
   FileCheck,
   Clock
 } from 'lucide-react';
@@ -26,7 +26,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 }) => {
   const stats = [
     {
-      value: '12+',
+      value: '5+',
       label: 'Years of Excellence',
       sub: 'Premier outbound travel'
     },
@@ -107,7 +107,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               Crafting Unforgettable Journeys with Trust, Transparency & Heart
             </h2>
             <p className="about-subtitle">
-              Sri Lanka's trusted outbound travel agency, bridging world-class international destinations 
+              Sri Lanka's trusted outbound travel agency, bridging world-class international destinations
               with seamless local service from our Colombo flagship office.
             </p>
           </div>
@@ -124,14 +124,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   Your Reliable Companion to the World's Most Captivating Horizons
                 </h3>
                 <p className="story-text">
-                  Founded with a vision to revolutionize outbound holiday travel for Sri Lankans, 
-                  <strong> Nationwide.lk</strong> has grown into one of the island's most respected travel agencies. 
+                  Founded with a vision to revolutionize outbound holiday travel for Sri Lankans,
+                  <strong> Nationwide.lk</strong> has grown into one of the island's most respected travel agencies.
                   We believe exploring the world should be exhilarating, completely stress-free, and accessible without compromise.
                 </p>
                 <p className="story-text">
-                  Whether you are planning a dream honeymoon overlooking the turquoise cliffs of Bali, 
-                  a sacred pilgrimage to Velankanni and the ancient shrines of India, a family holiday 
-                  to the vibrant theme parks of Dubai and Singapore, or a bucket-list 12-day grand voyage 
+                  Whether you are planning a dream honeymoon overlooking the turquoise cliffs of Bali,
+                  a sacred pilgrimage to Velankanni and the ancient shrines of India, a family holiday
+                  to the vibrant theme parks of Dubai and Singapore, or a bucket-list 12-day grand voyage
                   across Paris, Venice, and Rome—our seasoned destination specialists curate every moment with unmatched attention to detail.
                 </p>
 
@@ -153,9 +153,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 {/* Call to Actions */}
                 <div className="about-action-row">
                   {onContactClick ? (
-                    <button 
-                      type="button" 
-                      onClick={onContactClick} 
+                    <button
+                      type="button"
+                      onClick={onContactClick}
                       className="btn-primary about-cta-btn"
                       id="about-contact-btn"
                     >
@@ -163,8 +163,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                       <span>Speak with a Travel Expert</span>
                     </button>
                   ) : (
-                    <a 
-                      href="#contact" 
+                    <a
+                      href="#contact"
                       className="btn-primary about-cta-btn"
                     >
                       <PhoneCall size={17} />
@@ -173,9 +173,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   )}
 
                   {onViewAllTours && (
-                    <button 
-                      type="button" 
-                      onClick={onViewAllTours} 
+                    <button
+                      type="button"
+                      onClick={onViewAllTours}
                       className="btn-outline-about"
                       id="about-view-all-tours-btn"
                     >
@@ -194,10 +194,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <div className="about-visual-showcase">
                 {/* Primary Large Image */}
                 <div className="about-main-img-wrap">
-                  <img 
-                    src="/images/consultation.jpg" 
-                    alt="Nationwide Travels Colombo consultation desk and travel planning" 
-                    className="about-main-img" 
+                  <img
+                    src="/images/consultation.jpg"
+                    alt="Nationwide Travels Colombo consultation desk and travel planning"
+                    className="about-main-img"
                   />
                   <div className="about-img-gradient-overlay"></div>
 
@@ -223,10 +223,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 {/* Secondary Accent Card: Honeymoon & Worldwide Experience */}
                 <div className="about-secondary-card">
                   <div className="secondary-img-wrap">
-                    <img 
-                      src="/images/bali-couple-escapes.jpg" 
-                      alt="Romantic Bali holiday curated by Nationwide Travels" 
-                      className="secondary-img" 
+                    <img
+                      src="/images/bali-couple-escapes.jpg"
+                      alt="Romantic Bali holiday curated by Nationwide Travels"
+                      className="secondary-img"
                     />
                   </div>
                   <div className="secondary-info">
@@ -296,7 +296,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <div className="mission-content">
               <span className="mission-quote-mark">“</span>
               <p className="mission-quote-text">
-                Our mission is simple: to eliminate every anxiety from international travel so that you, your family, 
+                Our mission is simple: to eliminate every anxiety from international travel so that you, your family,
                 and your loved ones can focus on experiencing the joy of discovery and making lifelong memories.
               </p>
               <div className="mission-signature-row">
@@ -305,7 +305,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <span className="sig-role">Colombo Flagship Operations • Sri Lanka</span>
                 </div>
                 <div className="mission-action">
-                  <a 
+                  <a
                     href="https://wa.me/94716891891?text=Hello%20Nationwide.lk,%20I%20would%20like%20to%20learn%20more%20about%20your%20services"
                     target="_blank"
                     rel="noreferrer"

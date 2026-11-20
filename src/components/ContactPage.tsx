@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  ArrowLeft, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  Send, 
-  CheckCircle2, 
-  MessageCircle, 
-  CreditCard, 
-  PhoneCall, 
+import {
+  ArrowLeft,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Send,
+  CheckCircle2,
+  MessageCircle,
+  CreditCard,
+  PhoneCall,
   Sparkles
 } from 'lucide-react';
 import { RevealOnScroll } from './RevealOnScroll';
@@ -50,8 +50,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({
       {/* 1. Subnav Bar */}
       <div className="page-subnav-bar">
         <div className="container subnav-inner">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onBackToHome}
             className="back-to-home-btn"
           >
@@ -80,7 +80,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 Get in Touch with Our Senior Tour Directors
               </h1>
               <p className="page-lead-text">
-                Whether you need a custom family itinerary, group corporate booking, visa advisory, or want to book an advertised package, 
+                Whether you need a custom family itinerary, group corporate booking, visa advisory, or want to book an advertised package,
                 our travel consultants in Colombo are ready to assist you.
               </p>
             </div>
@@ -120,9 +120,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     <div className="card-info-content">
                       <h4 className="card-info-title">WhatsApp Instant Chat</h4>
                       <p className="card-info-numbers">
-                        <a 
-                          href="https://wa.me/94716891891?text=Hello%20Nationwide%20Lanka,%20I%20would%20like%20to%20inquire%20about%20a%20tour%20package." 
-                          target="_blank" 
+                        <a
+                          href="https://wa.me/94716891891?text=Hello%20Nationwide%20Lanka,%20I%20would%20like%20to%20inquire%20about%20a%20tour%20package."
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="whatsapp-live-link"
                         >
@@ -195,9 +195,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       <div className="form-grid-duo">
                         <div className="form-field-unit">
                           <label>Full Name *</label>
-                          <input 
-                            type="text" 
-                            placeholder="e.g. Kasun Fernando" 
+                          <input
+                            type="text"
+                            placeholder="e.g. Kasun Fernando"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             required
@@ -206,9 +206,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                         <div className="form-field-unit">
                           <label>Contact Phone / WhatsApp *</label>
-                          <input 
-                            type="tel" 
-                            placeholder="e.g. 077 123 4567" 
+                          <input
+                            type="tel"
+                            placeholder="e.g. 077 123 4567"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             required
@@ -218,9 +218,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                       <div className="form-field-unit">
                         <label>Email Address</label>
-                        <input 
-                          type="email" 
-                          placeholder="e.g. kasun@gmail.com" 
+                        <input
+                          type="email"
+                          placeholder="e.g. kasun@gmail.com"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
@@ -229,7 +229,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       <div className="form-grid-duo">
                         <div className="form-field-unit">
                           <label>Destination *</label>
-                          <select 
+                          <select
                             value={formData.destination}
                             onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
                           >
@@ -250,7 +250,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                         <div className="form-field-unit">
                           <label>Approx. Travel Month</label>
-                          <select 
+                          <select
                             value={formData.travelMonth}
                             onChange={(e) => setFormData({ ...formData, travelMonth: e.target.value })}
                           >
@@ -266,8 +266,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                       <div className="form-grid-trio">
                         <div className="form-field-unit">
-                          <label>Adults (12+ yrs)</label>
-                          <select 
+                          <label>Adults (5+ yrs)</label>
+                          <select
                             value={formData.adults}
                             onChange={(e) => setFormData({ ...formData, adults: e.target.value })}
                           >
@@ -281,7 +281,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                         <div className="form-field-unit">
                           <label>Children (0-11 yrs)</label>
-                          <select 
+                          <select
                             value={formData.children}
                             onChange={(e) => setFormData({ ...formData, children: e.target.value })}
                           >
@@ -294,7 +294,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                         <div className="form-field-unit">
                           <label>Hotel Category</label>
-                          <select 
+                          <select
                             value={formData.tier}
                             onChange={(e) => setFormData({ ...formData, tier: e.target.value })}
                           >
@@ -307,7 +307,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                       <div className="form-field-unit">
                         <label>Special Requests or Notes</label>
-                        <textarea 
+                        <textarea
                           rows={3}
                           placeholder="Tell us about specific attractions, flight preferences, dietary needs, or anniversary/honeymoon perks..."
                           value={formData.message}
@@ -337,16 +337,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                         One of our travel directors will review your dates and WhatsApp or call you at <strong>{formData.phone}</strong> with a detailed itinerary and quote within a few hours.
                       </p>
                       <div className="success-btn-group">
-                        <button 
-                          type="button" 
-                          onClick={() => setIsSent(false)} 
+                        <button
+                          type="button"
+                          onClick={() => setIsSent(false)}
                           className="btn-secondary-outline"
                         >
                           Submit Another Inquiry
                         </button>
-                        <button 
-                          type="button" 
-                          onClick={onExploreTours} 
+                        <button
+                          type="button"
+                          onClick={onExploreTours}
                           className="btn-primary"
                         >
                           Browse Other Tours
