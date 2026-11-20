@@ -41,10 +41,16 @@ export function App() {
 
   const [bookingPackage, setBookingPackage] = useState<TourPackage | null>(null);
   const [detailsPackage, setDetailsPackage] = useState<TourPackage | null>(null);
+  const [scrollToItinerary, setScrollToItinerary] = useState<boolean>(false);
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isPromoVideoOpen, setIsPromoVideoOpen] = useState(false);
   const [promoVideoId, setPromoVideoId] = useState<'dubai' | 'velankanni'>('dubai');
+
+  const handleViewDetails = (pkg: TourPackage, toItinerary: boolean = false) => {
+    setDetailsPackage(pkg);
+    setScrollToItinerary(toItinerary);
+  };
 
   const handleOpenPromoVideo = (videoId: 'dubai' | 'velankanni' = 'dubai') => {
     setPromoVideoId(videoId);
@@ -262,7 +268,7 @@ export function App() {
             currency={currency}
             onResetFilters={handleResetFilters}
             onBookNow={(pkg) => setBookingPackage(pkg)}
-            onViewDetails={(pkg) => setDetailsPackage(pkg)}
+            onViewDetails={handleViewDetails}
             onViewAllTours={(cId) => handleOpenAllTours(cId || null)}
             onWatchVideo={handleOpenPromoVideo}
           />
@@ -316,7 +322,7 @@ export function App() {
           onSelectCountry={(cId) => setSelectedCountryId(cId)}
           onBackToHome={handleBackToHome}
           onBookNow={(pkg) => setBookingPackage(pkg)}
-          onViewDetails={(pkg) => setDetailsPackage(pkg)}
+          onViewDetails={handleViewDetails}
           onOpenPromoVideo={handleOpenPromoVideo}
         />
       )}
@@ -383,9 +389,14 @@ export function App() {
       <TourDetailsModal 
         pkg={detailsPackage}
         currency={currency}
-        onClose={() => setDetailsPackage(null)}
+        scrollToItinerary={scrollToItinerary}
+        onClose={() => {
+          setDetailsPackage(null);
+          setScrollToItinerary(false);
+        }}
         onBookNow={(pkg) => {
           setDetailsPackage(null);
+          setScrollToItinerary(false);
           setBookingPackage(pkg);
         }}
         onWatchVideo={handleOpenPromoVideo}

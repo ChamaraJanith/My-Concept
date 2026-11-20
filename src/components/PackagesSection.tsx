@@ -10,7 +10,7 @@ interface PackagesSectionProps {
   currency: 'LKR' | 'USD';
   onResetFilters: () => void;
   onBookNow: (pkg: TourPackage) => void;
-  onViewDetails: (pkg: TourPackage) => void;
+  onViewDetails: (pkg: TourPackage, scrollToItinerary?: boolean) => void;
   onViewAllTours: (countryCode?: string) => void;
   onWatchVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }

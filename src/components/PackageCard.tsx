@@ -1,12 +1,12 @@
 import React from 'react';
-import { Moon, Star, Users, Info, Sparkles, Play } from 'lucide-react';
+import { Moon, Star, Users, Info, Sparkles, Play, Calendar } from 'lucide-react';
 import type { TourPackage } from '../types';
 
 interface PackageCardProps {
   pkg: TourPackage;
   currency: 'LKR' | 'USD';
   onBookNow: (pkg: TourPackage) => void;
-  onViewDetails: (pkg: TourPackage) => void;
+  onViewDetails: (pkg: TourPackage, scrollToItinerary?: boolean) => void;
   onWatchVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
@@ -32,7 +32,11 @@ export const PackageCard: React.FC<PackageCardProps> = ({
   return (
     <div className="package-card" id={`package-${pkg.id}`}>
       {/* Top Image Container */}
-      <div className="package-image-wrap">
+      <div 
+        className="package-image-wrap cursor-pointer"
+        onClick={() => onViewDetails(pkg, false)}
+        title={`View ${pkg.name} Details`}
+      >
         <img 
           src={pkg.image} 
           alt={pkg.name} 
@@ -69,7 +73,13 @@ export const PackageCard: React.FC<PackageCardProps> = ({
       {/* Card Content Body */}
       <div className="package-body">
         {/* Title */}
-        <h3 className="package-title">{pkg.name}</h3>
+        <h3 
+          className="package-title cursor-pointer hover:text-blue-600 transition-colors"
+          onClick={() => onViewDetails(pkg, false)}
+          title={`View ${pkg.name} Details`}
+        >
+          {pkg.name}
+        </h3>
 
         {/* Nights & Travelers */}
         <div className="package-meta-row">
@@ -137,14 +147,26 @@ export const PackageCard: React.FC<PackageCardProps> = ({
           >
             BOOK NOW
           </button>
+
+          <button
+            type="button"
+            onClick={() => onViewDetails(pkg, true)}
+            className="package-itinerary-btn"
+            title="View Day-by-Day Itinerary"
+            id={`itinerary-btn-${pkg.id}`}
+          >
+            <Calendar size={14} />
+            <span>Day by Day</span>
+          </button>
           
           <button
             type="button"
-            onClick={() => onViewDetails(pkg)}
+            onClick={() => onViewDetails(pkg, false)}
             className="package-info-btn"
-            title="View Full Tour Itinerary"
+            title="View Full Tour Details"
+            aria-label="View Full Tour Details"
           >
-            <Info size={18} />
+            <Info size={17} />
           </button>
         </div>
       </div>

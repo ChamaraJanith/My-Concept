@@ -165,7 +165,7 @@ interface AllToursPageProps {
   onSelectCountry: (countryId: string | null) => void;
   onBackToHome: () => void;
   onBookNow: (pkg: TourPackage) => void;
-  onViewDetails: (pkg: TourPackage) => void;
+  onViewDetails: (pkg: TourPackage, scrollToItinerary?: boolean) => void;
   onOpenPromoVideo?: (videoId: 'dubai' | 'velankanni') => void;
 }
 
