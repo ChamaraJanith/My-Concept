@@ -14,7 +14,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '15 October 2026',
     readTime: '6 min read',
-    image: '/images/paris-italy-12d11n.jpg',
+    image: '/images/blog-schengen-visa-europe.jpg',
     featured: true,
     excerpt: 'Applying for a European Schengen tourist visa from Colombo? Here is an official breakdown of required bank balances, fixed deposits, hotel vouchers, overseas medical insurance, and how to avoid costly visa rejections.',
     keyTakeaways: [
@@ -83,7 +83,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '10 October 2026',
     readTime: '5 min read',
-    image: '/images/dubai.jpg',
+    image: '/images/blog-dubai-marina-luxury.jpg',
     featured: false,
     excerpt: 'From ascending the 124th floor of Burj Khalifa to shopping tax-free gold in Deira and dune bashing in the Arabian desert, discover our curated 5-day Dubai travel playbook tailored for Sri Lankan holidaymakers.',
     keyTakeaways: [
@@ -131,7 +131,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '28 September 2026',
     readTime: '7 min read',
-    image: '/images/bali-couple-escapes.jpg',
+    image: '/images/blog-bali-honeymoon-villa.jpg',
     featured: false,
     excerpt: 'Why Bali continues to be the #1 dream destination for Sri Lankan newlyweds. Complete breakdown of e-VOA visa on arrival, flight routes, scenic spots, and romantic beachfront seafood dining in Jimbaran.',
     keyTakeaways: [
@@ -186,7 +186,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '18 September 2026',
     readTime: '5 min read',
-    image: '/images/india-chennai-5d4n.jpg',
+    image: '/images/blog-velankanni-shrine.jpg',
     featured: false,
     excerpt: 'Detailed spiritual travel guide for pilgrims travelling from Sri Lanka to the Basilica of Our Lady of Good Health in Velankanni, San Thome Cathedral, and historic Chennai shopping districts.',
     keyTakeaways: [
@@ -230,7 +230,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '30 August 2026',
     readTime: '4 min read',
-    image: '/images/bangkok-3d2n.jpg',
+    image: '/images/blog-bangkok-shopping-night-market.jpg',
     featured: false,
     excerpt: 'Chao Phraya dinner cruises, Safari World wild animal encounters, Platinum Mall wholesale fashion shopping, and Coral Island speedboats—smart tips to maximize every rupee in Thailand.',
     keyTakeaways: [
@@ -274,7 +274,7 @@ export const blogPosts: BlogPost[] = [
     },
     publishDate: '14 August 2026',
     readTime: '5 min read',
-    image: '/images/travel-ticketing-booking.jpg',
+    image: '/images/blog-travel-currency-forex.jpg',
     featured: false,
     excerpt: 'Crucial financial tips for Sri Lankans travelling abroad: understanding Central Bank travel allowances, using multi-currency debit cards, avoiding dynamic currency conversion (DCC) traps, and staying safe.',
     keyTakeaways: [

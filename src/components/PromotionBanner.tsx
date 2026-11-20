@@ -20,8 +20,8 @@ export const PromotionBanner: React.FC<PromotionBannerProps> = ({
             <div className="promo-image-col">
               <div className="promo-image-container">
                 <img 
-                  src="/images/consultation.jpg" 
-                  alt="Nationwide travel consultation offer" 
+                  src="/images/maldives.jpg" 
+                  alt="Nationwide special season holiday discount offer" 
                   className="promo-image" 
                 />
                 <span className="limited-time-badge">

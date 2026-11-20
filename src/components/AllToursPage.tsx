@@ -34,7 +34,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇹🇭',
     region: 'Bangkok, Pattaya & Phuket',
     tagline: 'Chao Phraya River luxury dinner cruises, Safari World open-air zoo safari, Coral Island turquoise beaches, Phi Phi Island speedboat tours, Dream World Snow Town & historic temples.',
-    image: '/images/bangkok-phuket-5d4n.jpg',
+    image: '/images/thailand-bangkok-wat-arun.jpg',
     highlights: [
       'Chao Phraya Dinner Cruise', 
       'Safari World Open Zoo', 
@@ -66,7 +66,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇸🇬',
     region: 'Marina Bay, Sentosa & Gardens by the Bay',
     tagline: 'Gardens by the Bay Flower Dome & Cloud Forest, Impression of Monet, Sentosa Universal Studios Singapore and guided city landmark tours.',
-    image: '/images/singapore-4d3n.jpg',
+    image: '/images/singapore-marina-skypark.jpg',
     highlights: [
       'Gardens by the Bay & Supertrees',
       'Flower Dome + Cloud Forest + Monet',
@@ -82,7 +82,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇲🇾',
     region: 'Kuala Lumpur, Genting & Sunway',
     tagline: 'Kuala Lumpur iconic city tour, Genting Highlands Awana SkyWay cable car, Batu Caves rainbow steps, Sunway Lagoon adventure rides & Aquaria KLCC.',
-    image: '/images/malaysia-4d3n.jpg',
+    image: '/images/malaysia-kuala-lumpur-skyline.jpg',
     highlights: [
       'Genting Highlands Awana SkyWay',
       'Batu Caves & Murugan Golden Statue',
@@ -98,7 +98,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇦🇪',
     region: 'Burj Khalifa, Marina, Desert Safari & Abu Dhabi',
     tagline: 'Dubai Marina luxury dhow dinner cruise, Burj Khalifa 124th floor observation deck, 4x4 desert safari with BBQ shows, Miracle Garden, Global Village & Abu Dhabi Ferrari World.',
-    image: '/images/dubai-4d3n.jpg',
+    image: '/images/dubai-burj-khalifa-downtown.jpg',
     highlights: [
       'Burj Khalifa 124th Floor Views',
       'Dubai Marina Evening Dinner Cruise',
@@ -114,7 +114,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇪🇺',
     region: 'France, Italy, Switzerland & United Kingdom',
     tagline: 'Grand 12-day European journeys: Paris Eiffel Tower & Louvre, Venice Gondola, Lake Como & Bellagio, Florence, Rome Colosseum & Vatican, Swiss Alps and London.',
-    image: '/images/europe-marvels-12d11n.jpg',
+    image: '/images/europe-paris-eiffel.jpg',
     highlights: [
       'Paris Eiffel Tower & Louvre Museum',
       'Lake Como & Bellagio Scenic Cruise',
@@ -130,7 +130,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇮🇩',
     region: 'Tanah Lot, Lempuyang, Ubud & Nusa Penida',
     tagline: 'Tanah Lot ocean sunset temple & watersports, Lempuyang Gate of Heaven, Uluwatu cliff temple & Kecak fire dance, Kintamani Volcano, and Nusa Penida island speedboat tours.',
-    image: '/images/bali.jpg',
+    image: '/images/bali-ulun-danu-temple.jpg',
     highlights: [
       'Tanah Lot & Lempuyang "Gate of Heaven"',
       'Uluwatu Cliff Temple & Sunset Kecak Fire Dance',
@@ -146,7 +146,7 @@ export const COUNTRY_DIRECTORY: CountryDirectoryItem[] = [
     flag: '🇻🇳',
     region: 'Hanoi, Halong Bay, Da Nang & Ho Chi Minh',
     tagline: 'Halong Bay luxury cruise, Ninh Binh Trang An caves, Da Nang Ba Na Hills Golden Bridge, Hoi An ancient lantern town & Ho Chi Minh Mekong Delta.',
-    image: '/images/vietnam.jpg',
+    image: '/images/vietnam-halong-bay-islands.jpg',
     highlights: [
       'Halong Bay Cruise, Kayaking & Titov Island Peak',
       'Ninh Binh: Hoa Lu Ancient Capital & Trang An Caves',

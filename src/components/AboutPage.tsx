@@ -1,14 +1,14 @@
 import React from 'react';
-import { 
-  ArrowLeft, 
-  Award, 
-  Compass, 
-  CheckCircle2, 
-  PhoneCall, 
-  ArrowRight, 
-  Star, 
-  Building2, 
-  HeartHandshake, 
+import {
+  ArrowLeft,
+  Award,
+  Compass,
+  CheckCircle2,
+  PhoneCall,
+  ArrowRight,
+  Star,
+  Building2,
+  HeartHandshake,
   FileCheck
 } from 'lucide-react';
 import { RevealOnScroll } from './RevealOnScroll';
@@ -111,8 +111,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       {/* 1. Page Header Breadcrumbs & Back Navigation */}
       <div className="page-subnav-bar">
         <div className="container subnav-inner">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onBackToHome}
             className="back-to-home-btn"
           >
@@ -141,7 +141,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 Crafting Exceptional World Journeys for Sri Lankans
               </h1>
               <p className="page-lead-text">
-                For over 12 years, Nationwide.lk has been the gold standard in premium outbound leisure and corporate travel in Sri Lanka. 
+                For over 5 years, Nationwide.lk has been the gold standard in premium outbound leisure and corporate travel in Sri Lanka.
                 We combine meticulous planning with unmatched personalized care so every trip feels like a five-star vacation.
               </p>
 
@@ -183,10 +183,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           <div className="about-story-grid">
             <RevealOnScroll animation="fade-right" duration={750} className="w-full">
               <div className="story-image-wrap">
-                <img 
-                  src="/images/europe-marvels-12d11n.jpg" 
-                  alt="Nationwide Travels Europe Journey" 
-                  className="story-main-img" 
+                <img
+                  src="/images/about-world-travel-planning.jpg"
+                  alt="Nationwide Travels Worldwide Luxury Journey Planning"
+                  className="story-main-img"
                 />
                 <div className="story-badge-floating">
                   <Star size={20} className="text-amber-400 fill-amber-400" />
@@ -203,13 +203,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <span className="section-pretitle">WHO WE ARE</span>
                 <h2 className="section-main-title">Born from a Passion for Flawless Travel</h2>
                 <p className="story-lead-para">
-                  Nationwide.lk was established with a singular vision: to dismantle the stress, inflated hidden costs, 
+                  Nationwide.lk was established with a singular vision: to dismantle the stress, inflated hidden costs,
                   and impersonal service that often plague outbound holiday planning in Sri Lanka.
                 </p>
                 <p className="story-body-para">
-                  We believe that an international holiday is more than just booking flights and hotels; it is about cherished family memories, 
-                  recharging from busy corporate lives, and experiencing the wonders of the world in comfort. 
-                  That is why we personally inspect hotels, negotiate directly with overseas airlines and tour operators, 
+                  We believe that an international holiday is more than just booking flights and hotels; it is about cherished family memories,
+                  recharging from busy corporate lives, and experiencing the wonders of the world in comfort.
+                  That is why we personally inspect hotels, negotiate directly with overseas airlines and tour operators,
                   and maintain a dedicated concierge desk ready to assist you anytime.
                 </p>
 
