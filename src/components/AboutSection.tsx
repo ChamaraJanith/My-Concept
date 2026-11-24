@@ -11,7 +11,9 @@ import {
   Building2,
   HeartHandshake,
   FileCheck,
-  Clock
+  Clock,
+  Play,
+  X
 } from 'lucide-react';
 import { RevealOnScroll } from './RevealOnScroll';
 
@@ -24,6 +26,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   onViewAllTours,
   onContactClick
 }) => {
+  const [showVideoModal, setShowVideoModal] = React.useState(false);
+
   const stats = [
     {
       value: '5+',
@@ -201,6 +205,20 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   />
                   <div className="about-img-gradient-overlay"></div>
 
+                  {/* Center Play Introduction Video Button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowVideoModal(true)}
+                    className="about-play-video-trigger"
+                    title="Watch Official Introduction Video"
+                  >
+                    <div className="play-pulse-ring"></div>
+                    <div className="play-btn-circle">
+                      <Play size={18} className="fill-white text-white ml-0.5" />
+                    </div>
+                    <span className="play-label">Watch Introduction Video</span>
+                  </button>
+
                   {/* Floating Badge 1: SLTDA Accreditation */}
                   <div className="about-floating-badge badge-top-left">
                     <div className="badge-pulse-dot"></div>
@@ -320,6 +338,33 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </div>
         </RevealOnScroll>
       </div>
+
+      {/* Video Modal */}
+      {showVideoModal && (
+        <div className="video-modal-backdrop" onClick={() => setShowVideoModal(false)}>
+          <div className="video-modal-box" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="video-modal-close"
+              onClick={() => setShowVideoModal(false)}
+              aria-label="Close video modal"
+            >
+              <X size={20} />
+            </button>
+            <div className="video-modal-player-wrap">
+              <video
+                controls
+                autoPlay
+                playsInline
+                className="video-modal-player"
+              >
+                <source src="/videos/welcome.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

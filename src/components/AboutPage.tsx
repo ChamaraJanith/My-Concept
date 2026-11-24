@@ -9,7 +9,12 @@ import {
   Star,
   Building2,
   HeartHandshake,
-  FileCheck
+  FileCheck,
+  Video,
+  Sparkles,
+  Quote,
+  MessageSquare,
+  ShieldCheck
 } from 'lucide-react';
 import { RevealOnScroll } from './RevealOnScroll';
 
@@ -160,7 +165,168 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 3. Key Stats */}
+      {/* 3. Official Introduction Video Section */}
+      <section className="about-intro-video-section">
+        <div className="container">
+          <RevealOnScroll animation="fade-up" duration={700}>
+            <div className="section-header-center">
+              <span className="section-pretitle">
+                <Video size={15} className="inline mr-1 text-sky-400" />
+                OFFICIAL COMPANY INTRODUCTION
+              </span>
+              <h2 className="section-main-title">Welcome to Nationwide Travels</h2>
+              <p className="section-subtitle">
+                Watch our official introduction video to explore how we curate seamless world holidays, authentic pilgrimage experiences, and luxury vacations.
+              </p>
+            </div>
+
+            <div className="intro-video-card">
+              <div className="intro-video-frame">
+                <video
+                  className="intro-video-element"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster="/images/about-world-travel-planning.jpg"
+                >
+                  <source src="/videos/welcome.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <div className="intro-video-caption-bar">
+                <div className="caption-badge">
+                  <Sparkles size={14} className="text-amber-400" />
+                  <span>Nationwide.lk • Corporate Introduction & Welcome</span>
+                </div>
+                <div className="caption-tags">
+                  <span className="tag-pill">SLTDA Licensed</span>
+                  <span className="tag-pill">0% Bank Installments</span>
+                  <span className="tag-pill">Direct Global Operations</span>
+                  <span className="tag-pill">24/7 Ground Support</span>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* 4. CEO & Managing Director Section */}
+      <section className="about-ceo-section">
+        <div className="container">
+          <RevealOnScroll animation="fade-up" duration={750}>
+            <div className="ceo-card-wrapper">
+              <div className="ceo-grid">
+                {/* Left Column: CEO Portrait & Direct Badge */}
+                <div className="ceo-photo-col">
+                  <div className="ceo-image-container">
+                    <img
+                      src="/images/Yoshitha_Jayanette.jpg"
+                      alt="Yoshitha Jayanette - CEO / Managing Director, Nationwide Travels"
+                      className="ceo-photo"
+                    />
+                    <div className="ceo-title-overlay">
+                      <span className="ceo-role-tag">CEO / MANAGING DIRECTOR</span>
+                      <h3 className="ceo-name">Yoshitha Jayanette</h3>
+                      <p className="ceo-org">Nationwide Travels (Pvt) Ltd</p>
+                    </div>
+                  </div>
+
+                  {/* Direct Contact Card */}
+                  <div className="ceo-quick-contact">
+                    <span className="quick-label">Direct Executive Hotline:</span>
+                    <a href="tel:+94773142911" className="quick-phone">
+                      <PhoneCall size={15} />
+                      <strong>+94 77 314 2911</strong>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Right Column: Leadership Statement & Direct Actions */}
+                <div className="ceo-content-col">
+                  <div className="ceo-eyebrow">
+                    <Quote size={15} className="text-amber-400" />
+                    <span>MESSAGE FROM THE MANAGING DIRECTOR</span>
+                  </div>
+
+                  <h2 className="ceo-heading">
+                    "Every Journey We Craft Carries Our Personal Guarantee of Safety & Excellence"
+                  </h2>
+
+                  <div className="ceo-body-text">
+                    <p className="ceo-para-lead">
+                      Welcome to Nationwide Travels. When I established this agency, our goal was crystal clear: to give Sri Lankan travelers a dependable, world-class travel partner free from hidden charges, rushed itineraries, and unkept promises.
+                    </p>
+                    <p className="ceo-para">
+                      Whether you are traveling for a memorable family holiday across Europe, a romantic island escape, or a sacred pilgrimage to Velankanni and Dambadiva, my team and I personally ensure every detail is rigorously inspected—from luxury 4★/5★ hotels and private AC transports to smooth visa approvals.
+                    </p>
+                    <p className="ceo-para">
+                      You are never just a booking number with us. From the moment you consult us in Colombo until you safely return home, our 24/7 executive team is always just a phone call away.
+                    </p>
+                  </div>
+
+                  {/* Key Leadership Guarantees */}
+                  <div className="ceo-guarantees-grid">
+                    <div className="ceo-guarantee-item">
+                      <ShieldCheck size={18} className="text-emerald-400 shrink-0" />
+                      <div>
+                        <strong>Executive Accountability</strong>
+                        <span>Direct escalation to leadership whenever you need assistance</span>
+                      </div>
+                    </div>
+                    <div className="ceo-guarantee-item">
+                      <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
+                      <div>
+                        <strong>100% Fixed & Transparent Rates</strong>
+                        <span>Zero hidden departure levies, all taxes stated upfront</span>
+                      </div>
+                    </div>
+                    <div className="ceo-guarantee-item">
+                      <Award size={18} className="text-amber-400 shrink-0" />
+                      <div>
+                        <strong>SLTDA Accredited Standard</strong>
+                        <span>Fully bonded and compliant with Sri Lanka Tourism regulations</span>
+                      </div>
+                    </div>
+                    <div className="ceo-guarantee-item">
+                      <HeartHandshake size={18} className="text-sky-400 shrink-0" />
+                      <div>
+                        <strong>24/7 Sinhala & English Concierge</strong>
+                        <span>Round-the-clock WhatsApp support throughout your overseas trip</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Direct Action Buttons */}
+                  <div className="ceo-action-row">
+                    <a
+                      href="https://wa.me/94773142911?text=Hello%20Mr.%20Yoshitha%20Jayanette%2C%20I%20am%20contacting%20you%20via%20Nationwide.lk%20regarding%20a%20travel%20inquiry."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ceo-whatsapp-btn"
+                      title="Direct WhatsApp with CEO / Managing Director"
+                    >
+                      <MessageSquare size={17} />
+                      <span>WhatsApp CEO: +94 77 314 2911</span>
+                    </a>
+
+                    <a
+                      href="tel:+94773142911"
+                      className="ceo-call-btn"
+                      title="Call CEO / Managing Director"
+                    >
+                      <PhoneCall size={16} />
+                      <span>Direct Call</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* 5. Key Stats */}
       <section className="about-stats-strip">
         <div className="container">
           <div className="stats-strip-grid">
@@ -177,7 +343,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 4. Story Section */}
+      {/* 6. Story Section */}
       <section className="about-story-section">
         <div className="container">
           <div className="about-story-grid">
@@ -233,7 +399,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 5. Four Pillars */}
+      {/* 7. Four Pillars */}
       <section className="about-pillars-section">
         <div className="container">
           <RevealOnScroll animation="fade-down" duration={700}>
@@ -260,7 +426,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 6. Why Nationwide vs Others Comparison Table */}
+      {/* 8. Why Nationwide vs Others Comparison Table */}
       <section className="about-comparison-section">
         <div className="container">
           <RevealOnScroll animation="fade-down" duration={700}>
@@ -303,7 +469,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 7. Milestones */}
+      {/* 9. Milestones */}
       <section className="about-milestones-section">
         <div className="container">
           <RevealOnScroll animation="fade-down" duration={700}>
@@ -325,7 +491,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* 8. Bottom CTA */}
+      {/* 10. Bottom CTA */}
       <section className="about-bottom-cta">
         <div className="container">
           <div className="about-cta-card">
@@ -349,3 +515,5 @@ export const AboutPage: React.FC<AboutPageProps> = ({
     </div>
   );
 };
+
+export default AboutPage;
